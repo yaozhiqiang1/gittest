@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+
+
+
+ http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+    <bean class="com.fongwell.base.validate.ValidateAspect"/>
+
+    <mybatis:scan base-package="com.fongwell.satchi.crm.core"
+                  annotation="org.apache.ibatis.annotations.Mapper"/>
+
+    <bean class="com.fongwell.satchi.crm.api.audit.NoopEventStore" id="eventStore">
+    </bean>
+
+    <bean id="auditUserExtractor" class="com.fongwell.infrastructure.event.audit.ThreadLocalAuditUserExtractor"/>
+
+    <bean class="com.fongwell.infrastructure.event.audit.AuditEventServiceImpl" id="auditEventService">
+        <constructor-arg index="0">
+            <bean class="com.fongwell.infrastructure.event.audit.JdbcEventAuditStore">
+                <constructor-arg index="0" ref="jdbcTemplate"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <!--<bean class="com.fongwell.event.audit.MockAuditUserExtractor"/>-->
+            <ref bean="auditUserExtractor"/>
+        </constructor-arg>
+    </bean>
+
+    <bean class="com.fongwell.infrastructure.event.publish.LocalEventPublisher" id="eventPublisher">
+        <constructor-arg index="0">
+            <list>
+                <ref bean="domainEventDispatcher"/>
+            </list>
+        </constructor-arg>
+        <constructor-arg index="1" ref="eventStore"/>
+        <constructor-arg index="2" ref="auditEventService"/>
+    </bean>
+
+    <bean class="com.fongwell.infrastructure.event.LocalDomainEventDispatcher" id="domainEventDispatcher">
+        <constructor-arg index="0">
+            <bean class="com.fongwell.infrastructure.event.DefaultDomainEventSubscriberRegistry" lazy-init="true"/>
+        </constructor-arg>
+    </bean>
+
+    <bean class="com.fongwell.base.workflow.SequencialWorkflow" id="processOrderPaymentWorkflow">
+        <property name="activities">
+            <list>
+                <ref bean="validateOrderStateActivity"/>
+                <ref bean="applyOrderPaymentActivity"/>
+                <ref bean="startShippingActivity"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.cache.ehcache.EhCacheCacheManager" id="cacheManager">
+        <constructor-arg index="0">
+            <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+                <property name="configLocation" value="classpath:ehcache.xml"/>
+
+
+            </bean>
+        </constructor-arg>
+
+    </bean>
+
+</beans>

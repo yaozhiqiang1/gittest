@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.order.query.mapper.OrderStatsQueryMapper">
+
+
+    <select id="queryStats" resultType="com.fongwell.satchi.crm.core.order.query.dto.OrderStats">
+
+    select
+    round(count(1) / (COALESCE(extract(year from max(createdDate)) - extract(year from min(createdDate)),1)::int + 1),1) as frequency,
+    COALESCE(sum(price),0) as expenses,
+    count(1) as orders,
+    case when sum(amount) = 0 then 0 else COALESCE(round(sum(price) / sum(amount),2),0) end as expensePerItem,
+    case when count(1) = 0 then 0 else COALESCE(round(sum(price) / count(1),2),0) end as expensePerOrder,
+    case when sum(originalPrice) = 0 then 0 else round(sum(price) * 100 / sum(originalPrice) ,2) end as discount
+    from crm_order_history
+    where customer_id = #{customerId}
+</select>
+
+    <resultMap id="orderItemHistoryItem" type="java.util.HashMap">
+        <result column="item_id" property="id"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="channel" property="channel"/>
+        <result column="order_id" property="orderId"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="image" property="image"/>
+
+    </resultMap>
+    <select id="queryOrderItemHistory" resultMap="orderItemHistoryItem">
+
+        select item.item_id, h.createdDate, h.source as channel, h.order_id,
+        item.name, item.price,item.image
+        from crm_order_history h
+        left join crm_order_history_item item on item.history_id = h.id
+        order by h.createdDate desc, h.id desc
+        offset #{from}
+        limit #{size}
+    </select>
+
+
+    <resultMap id="orderHistoryItem" type="java.util.HashMap">
+        <result column="store_name" property="storeName"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="source" property="source"/>
+        <result column="order_id" property="orderId"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="paymentGatewayType" property="paymentGatewayType"/>
+        <result column="amount" property="amount"/>
+        <result column="discount" property="discount"/>
+    </resultMap>
+    <select id="queryOrderHistory" resultMap="orderHistoryItem">
+
+        select
+        discount, amount,
+        paymentGatewayType,
+        h.createdDate,
+        h.source,
+        h.order_id,
+        store.name as store_name
+        from crm_order_history h
+        left join fw_store store on store.id = h.store_id
+        order by h.createdDate desc, h.id desc
+        offset #{from}
+        limit #{size}
+    </select>
+
+
+
+    <resultMap id="totalExpenseItem" type="com.fongwell.satchi.crm.core.common.KeyValue">
+
+        <result column="customer_id" property="id"/>
+        <result column="value" property="value" javaType="java.math.BigDecimal"/>
+
+    </resultMap>
+    <select id="queryTotalExpenses" resultMap="totalExpenseItem">
+        select customer_id, COALESCE(sum(price),0) as value
+        from crm_order_history
+        where customer_id in
+        <foreach collection="customerIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        group by customer_id
+    </select>
+
+</mapper>

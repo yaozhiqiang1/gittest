@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.customer.query.mapper.WxCustomerQueryMapper">
+
+
+    <resultMap id="profile" type="java.util.HashMap">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="mobile" column="mobile"/>
+        <result property="number" column="number"/>
+        <result property="storeId" column="storeId"/>
+        <result property="store" column="store"/>
+        <result property="credits" column="credits"/>
+        <result property="headImageUrl" column="headImageUrl"/>
+    </resultMap>
+
+    <select id="queryProfile" resultMap="profile">
+
+        select c.id,c.name,c.number,
+         c.mobile,wx.headimgurl as headImageUrl,
+         store.id as storeId,store.name as store,credit.credits
+         from fw_customer c
+         left join crm_customer_credit credit on credit.customerId = c.id
+        left join fw_store store on store.id = c.storeid
+        left join wx_binding b on targetid = c.id
+        left join crm_wx_user wx on wx.id = b.wxid
+        where c.id = #{id}
+    </select>
+
+
+    <resultMap id="storeCustomer" type="java.util.HashMap">
+        <result column="id" property="id" javaType="java.lang.Long"/>
+        <result column="name" property="name"/>
+        <result column="dob" property="dob"/>
+        <result column="sex" property="sex"/>
+        <result column="headImageUrl" property="headImageUrl"/>
+        <result column="important" property="important"/>
+    </resultMap>
+
+    <select id="queryStoreCustomers" resultMap="storeCustomer">
+
+        select c.id, c.name,c.dob,c.sex, wx.headimgurl as headImageUrl,
+        case when ic.store_id is null then false else true end as important
+        from fw_customer c
+        left join wx_binding b on b.targetid = c.id
+        left join crm_wx_user wx on wx.id = b.wxid
+        left join fw_important_customer ic on ic.customer_id = c.id
+        <where>
+            c.deleted = false
+            <if test="storeId != null">
+                and c.storeid = #{storeId}
+            </if>
+        </where>
+
+        <if test="query!=null and query != ''">
+            <bind name="searchQuery" value="query"/>
+            and c.name like '%${searchQuery}%'
+        </if>
+
+        <if test="ids != null and ids.size() > 0">
+           and c.id in
+            <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by c.createdDate desc nulls last, c.id desc
+        offset #{from}
+        limit #{size}
+    </select>
+
+
+    <resultMap id="storeCustomerDetail" type="java.util.HashMap">
+        <result column="id" property="id" javaType="java.lang.Long"/>
+        <result column="name" property="name"/>
+        <result column="dob" property="dob"/>
+        <result column="sex" property="sex"/>
+        <result column="headImageUrl" property="headImageUrl"/>
+        <result column="important" property="important"/>
+    </resultMap>
+
+    <select id="queryDetail" resultMap="storeCustomerDetail">
+        select c.name, c.dob,c.sex , wx.headimgurl as headImageUrl,
+        case when ic.store_id is null then false else true end as important
+        from fw_customer c
+        left join wx_binding b on b.targetid = c.id
+        left join crm_wx_user wx on wx.id = b.wxid
+        left join fw_important_customer ic on ic.customer_id = c.id
+        where c.id = #{id}
+    </select>
+</mapper>

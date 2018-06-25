@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.pricing.query.mapper.SkuPricingQueryMapper">
+
+
+    <resultMap id="priceItem" type="com.fongwell.satchi.crm.core.pricing.query.dto.SkuPriceItem">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="mobile" column="mobile"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="queryItems" resultMap="priceItem">
+
+        select id, price as salePrice, originalPrice as price
+        from crm_sku where id in
+        <foreach collection="skuIds" item="skuId" open="(" close=")" separator=",">
+            #{skuId}
+        </foreach>
+    </select>
+
+
+</mapper>

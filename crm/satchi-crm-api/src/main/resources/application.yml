@@ -1,0 +1,92 @@
+spring:
+  application:
+    name: satchiCrmApi
+  datasource:
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:postgresql://127.0.0.1:5432/crm?stringtype=unspecified
+      #url: jdbc:postgresql://erptest.fongwell.com:49131/satchi?stringtype=unspecified
+      username: postgres
+      password: fongwell
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        minimum-idle: 5
+        maximum-pool-size: 20
+  transaction:
+    rollback-on-commit-failure: true
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+    properties:
+      hibernate:
+          dialect: org.hibernate.dialect.PostgreSQL94Dialect
+          show_sql: false
+          format_sql: false
+          user_sql_comments: false
+          hbm2ddl-auto: update
+server:
+  port: 2222
+  undertow:
+    worker-threads: 3
+    io-threads: 10
+
+container:
+  brandNews:
+    id: -1
+    name: brandNewsContainer
+  homePage:
+    id: -1
+    name: homePageContainer
+  category:
+    id: -1
+    name: categoryContainer
+
+topCategory:
+  limit: 8
+
+wx:
+  defaultClient: test
+  appId: test
+  appSecret: test
+  enabled: true
+  jssdk:
+    debug: true
+  account:
+    repository:
+      inmemory:
+        enabled: true
+        accounts:
+          test:
+            appId: wx7a2d5fcb771ecf37
+            appSecret: 7edaceb41074802c89ca63fe5fbf3f58
+            #appId: wxcaf3ca475beb17f7
+            #appSecret: be4f2a1424b3bbbff633a1e925078f63
+  pay:
+    enabled: false
+    notifyUrl: http://local.ngrok.fongwell.com/api/wxpay/notify
+    account:
+      repository:
+        inmemory:
+          enabled: true
+          accounts:
+            test:
+              appId: wx7a2d5fcb771ecf37
+              appSecret: 7edaceb41074802c89ca63fe5fbf3f58
+              mchId: 1313837101
+              paySignKey: 2ab9071b06b9f739b950ddb41db2690d
+
+
+
+qiniu:
+  domain: "http://daily.img.fongwell.com/"
+  bucket: daily
+  key: JtlDTCiRt__r1ZjphswQXo-5uSqMuJGwKnSrDHzg
+  secret: gZCi5HYoXuGMRjILUkwrvLsZ9xQa7VOS84a8lw_h
+  token:
+    timeout: 900
+  http:
+    maxTotal: 10
+    maxPerRoute: 10

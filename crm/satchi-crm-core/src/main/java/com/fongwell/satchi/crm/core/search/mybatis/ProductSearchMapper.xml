@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.search.mybatis.ProductSearchMapper">
+
+    <resultMap id="product" type="hashmap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="number" property="number"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="state" property="state"/>
+        <result column="type" property="type"/>
+        <result column="orderNumber" property="orderNumber"/>
+        <result column="pcImage" property="pcImage" />
+        <result column="mobileImage" property="mobileImage"/>
+        <result column="originalPrice" property="price"/>
+        <result column="price" property="salePrice"/>
+    </resultMap>
+
+
+    <select id="searchProductsForBookmarks" resultMap="product">
+        select p.id,p.name,p.number,p.createdDate,p.pcImage,p.mobileImage,
+        s.price, originalPrice,
+        p.state,p.postage,p.orderNumber
+        from crm_product p
+        inner join crm_product_settings s on s.product_id = p.id
+        where p.deleted = false
+        <if test="ids != null and ids.size() > 0">
+            and p.id in
+            <foreach collection="ids" item="productId" open="(" close=")" separator=",">
+                #{productId}
+            </foreach>
+
+        </if>
+        and p.state = 'enable'
+
+        order by p.orderNumber,p.lastmodifiedDate desc
+        offset #{from}
+        limit #{size}
+    </select>
+
+</mapper>

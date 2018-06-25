@@ -1,0 +1,9 @@
+[servers]
+erp.fongwell.com
+
+[servers:vars]
+deploy_path=/data/docker/crm
+archive_path=/data/docker/crm/archives
+java_opts="-Dspring.profiles.active=prod -XX:+HeapDumpOnOutOfMemoryError -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:NewSize=128M -XX:MaxPermSize=200m -Xms512m -Xmx512m -server -Duser.timezone=Asia/Shanghai -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=121.201.69.162"
+docker_container=crm-api
+workspace=/mnt/crm

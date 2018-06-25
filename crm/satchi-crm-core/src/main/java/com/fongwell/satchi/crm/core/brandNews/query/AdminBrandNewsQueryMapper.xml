@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.brandNews.query.AdminBrandNewsQueryMapper">
+    <resultMap id="brandNews" type="hashmap">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="introduction" column="introduction"/>
+        <result property="coverUrl" column="coverUrl"/>
+        <result property="topCoverUrl" column="topCoverUrl"/>
+        <result property="videoCoverUrl" column="videoCoverUrl"/>
+        <result property="videoUrl" column="videoUrl"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="state" column="state"/>
+        <result property="content" column="content"/>
+        <result property="lastmodifiedDate" column="lastmodifiedDate"/>
+        <result property="orderNumber" column="orderNumber"/>
+    </resultMap>
+
+    <sql id="findBrandNews">
+        select n.id,n.title,n.coverUrl,n.topCoverUrl,n.videoCoverUrl,n.videoUrl,n.createdDate,n.lastmodifiedDate,n.orderNumber,
+        n.state
+        from crm_brand_news n
+    </sql>
+
+    <select id="findAll" resultMap="brandNews">
+        <include refid="findBrandNews"/>
+        where n.deleted = false
+        <if test="request.states != null and request.states.size() > 0">
+            and n.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by orderNumber,lastmodifiedDate desc
+        <if test="request.from > 0">offset #{request.from}</if>
+        <if test="request.size > 0">limit #{request.size}</if>
+    </select>
+
+    <select id="count" resultType="integer">
+        select count(1)
+        from crm_brand_news n
+        where n.deleted = false
+        <if test="request.states != null and request.states.size() > 0">
+            and n.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="get" resultMap="brandNews">
+        select n.id,n.title,n.coverUrl,n.topCoverUrl,n.videoCoverUrl,n.videoUrl,n.createdDate,n.lastmodifiedDate,n.orderNumber,
+        n.state,n.content,n.introduction
+        where id = #{id} and deleted = false
+    </select>
+</mapper>

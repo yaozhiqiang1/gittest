@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.customer.query.mapper.CustomerAddressQueryMapper">
+
+
+    <select id="queryAddreses" resultType="com.fongwell.satchi.crm.core.customer.dto.AddressDto">
+select * from  crm_address where customer_id = #{customerId}
+order by case when defaultAddress is true then 0 else 1 end,displayOrder
+    </select>
+    <select id="queryAddress" resultType="com.fongwell.satchi.crm.core.customer.domain.value.AddressValue">
+        select * from  crm_address where id = #{id}
+
+    </select>
+
+
+</mapper>

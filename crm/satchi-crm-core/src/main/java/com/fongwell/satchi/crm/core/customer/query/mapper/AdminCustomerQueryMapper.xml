@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.customer.query.mapper.AdminCustomerQueryMapper">
+
+
+    <resultMap id="customerListItem" type="java.util.HashMap">
+        <result column="id" property="id"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="dob" property="dob"/>
+        <result column="id" property="id"/>
+        <result column="mobile" property="mobile"/>
+        <result column="number" property="number"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="storeName" property="storeName"/>
+    </resultMap>
+    <select id="queryCustomers" resultMap="customerListItem">
+        select c.createdDate, c.dob, c.id,
+        c.mobile,c.number, c.name,c.sex, store.name as storeName
+         from  fw_customer c
+         left join fw_store store on c.storeid = store.id
+         where c.deleted = false
+         order by createdDate desc offset #{from} limit #{size}
+
+    </select>
+
+    <select id="countCustomers" resultType="int">
+        select count(1) from fw_customer where deleted = false
+    </select>
+
+    <resultMap id="customerDetail" type="java.util.HashMap">
+        <result column="id" property="id"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="dob" property="dob"/>
+        <result column="id" property="id"/>
+        <result column="mobile" property="mobile"/>
+        <result column="number" property="number"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="storeName" property="storeName"/>
+
+    </resultMap>
+    <select id="getCustomer" resultMap="customerDetail">
+       select c.createdDate, c.dob, c.id,
+        c.mobile,c.number, c.name,c.sex, store.name as storeName
+         from  fw_customer c
+         left join fw_store store on c.storeid = store.id
+         where c.id= #{id}
+    </select>
+
+</mapper>

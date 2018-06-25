@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.series.query.AdminSeriesQueryMapper">
+
+
+    <resultMap id="seriesListItem" type="java.util.HashMap">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="imageUrl" column="imageUrl"/>
+        <result property="videoUrl" column="videoUrl"/>
+        <result property="buttonText" column="buttonText"/>
+        <result property="source" column="source"/>
+        <result property="opacity" column="opacity"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <select id="listSeries" resultMap="seriesListItem">
+        select id, imageUrl,videoUrl,title,buttonText,opacity,createdDate,state,source
+        from crm_series
+        where deleted = FALSE
+        order by id desc
+        offset #{from}
+        limit #{size}
+    </select>
+
+    <select id="countSeries" resultType="int">
+        select count(1)  from crm_series
+        where deleted = FALSE
+    </select>
+
+
+    <resultMap id="seriesDetail" type="java.util.HashMap">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="imageUrl" column="imageUrl"/>
+        <result property="videoUrl" column="videoUrl"/>
+        <result property="buttonText" column="buttonText"/>
+        <result property="source" column="source"/>
+        <result property="opacity" column="opacity"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="state" column="state"/>
+        <result property="introduction" column="introduction"/>
+        <collection property="products" javaType="java.util.LinkedList" ofType="java.util.HashMap">
+            <id column="p_id" property="id"/>
+            <result column="p_name" property="name"/>
+            <result column="p_image" property="image"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSeries" resultMap="seriesDetail">
+             select s.id,
+             s.introduction,
+             s.imageUrl,
+             s.videoUrl,s.title,s.buttonText,
+             s.opacity,s.createdDate,s.state,s.source,
+             p.id as p_id,p.name as p_name,p.pcImage as p_image
+        from crm_series s
+        left join crm_series_product sp on sp.series_id = s.id
+        left join crm_product p on p.id = sp.product_id
+        where s.id = #{id}
+        order by sp.displayOrder
+    </select>
+
+
+</mapper>
