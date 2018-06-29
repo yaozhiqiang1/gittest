@@ -121,4 +121,20 @@ public class Customer extends AbstractAggregateRoot {
     public void setSex(final Sex sex) {
         this.sex = sex;
     }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
 }

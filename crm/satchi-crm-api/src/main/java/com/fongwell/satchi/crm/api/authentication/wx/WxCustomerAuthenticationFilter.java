@@ -3,6 +3,7 @@ package com.fongwell.satchi.crm.api.authentication.wx;
 import com.fongwell.satchi.crm.api.security.filter.AntPathMatcherFilter;
 import com.fongwell.satchi.crm.core.customer.service.CustomerAuthenticationService;
 import com.fongwell.satchi.crm.wx.user.binding.WxUserBindingService;
+
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,10 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -30,6 +33,7 @@ public class WxCustomerAuthenticationFilter extends AntPathMatcherFilter {
     private CustomerAuthenticationService customerAuthenticationService;
 
     private WxUserBindingService wxUserBindingService;
+
 
     public WxCustomerAuthenticationFilter(final String pattern, final CustomerAuthenticationService customerAuthenticationService, final WxUserBindingService wxUserBindingService) {
         super(pattern);

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.Id;
+
 /**
  * Created by docker on 5/23/18.
  */
@@ -20,9 +22,19 @@ public class WxCreditApi {
     @Autowired
     private CreditQueryMapper creditQueryMapper;
 
+    /**
+     *  微信端积分查询
+     * @param from
+     * @param size
+     * @return
+     */
     @GetMapping("/record")
     public Payload records(@RequestParam(required = false, defaultValue = "0") int from,
                            @RequestParam(required = false, defaultValue = "20") int size) {
         return new Payload(creditQueryMapper.queryCreditRecords(WxCustomerContext.getUser().getCustomerId(), CreditType.reward.name(), from, size));
     }
+
+
+
+
 }

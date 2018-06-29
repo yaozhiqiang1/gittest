@@ -28,7 +28,7 @@ public class CreditApi {
     private CreditConfigurationQueryMapper creditConfigurationQueryMapper;
 
     /**
-     * 保存积分设置
+     * 积分设置
      * @param data
      * @param result
      */

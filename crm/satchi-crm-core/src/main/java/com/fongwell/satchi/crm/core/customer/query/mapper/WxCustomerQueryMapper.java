@@ -1,6 +1,7 @@
 package com.fongwell.satchi.crm.core.customer.query.mapper;
 
 import com.fongwell.satchi.crm.core.customer.domain.aggregate.Customer;
+import com.fongwell.satchi.crm.core.customer.query.dto.CustomerStore;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,4 +26,7 @@ public interface WxCustomerQueryMapper {
     Map queryDetail(@Param("id") long id);
 
     Customer queryMobile(String mobile);
+
+
+
 }

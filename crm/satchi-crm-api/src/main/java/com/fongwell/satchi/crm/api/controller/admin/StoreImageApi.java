@@ -18,7 +18,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/storeImage")
-public class StoreImageApi {
+public class  StoreImageApi {
 
     @Resource(name = "storeImageService")
     private StoreImageService storeImageService;

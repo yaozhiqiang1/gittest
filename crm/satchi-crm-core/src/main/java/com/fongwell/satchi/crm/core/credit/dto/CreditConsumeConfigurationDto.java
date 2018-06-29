@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class CreditConsumeConfigurationDto implements Serializable {
 
     @NotNull(message = "consume.credit.required")
-    private Integer credit;
+    private Integer credit;//积分
 
     @NotNull(message = "consume.cash.required")
     private BigDecimal cash;

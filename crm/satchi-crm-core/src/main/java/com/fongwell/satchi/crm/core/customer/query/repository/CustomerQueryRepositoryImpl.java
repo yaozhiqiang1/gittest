@@ -1,15 +1,19 @@
 package com.fongwell.satchi.crm.core.customer.query.repository;
 
+import com.fongwell.satchi.crm.core.customer.domain.aggregate.Customer;
 import com.fongwell.satchi.crm.core.customer.query.dto.CustomerDetails;
 import com.fongwell.satchi.crm.core.customer.query.mapper.CustomerQueryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by docker on 2/25/18.
  */
 @Repository("customerQueryRepository")
 public class CustomerQueryRepositoryImpl implements CustomerQueryRepository {
+
 
     @Autowired
     private CustomerQueryMapper customerQueryMapper;
@@ -23,4 +27,15 @@ public class CustomerQueryRepositoryImpl implements CustomerQueryRepository {
     public CustomerDetails queryCustomerDetails(final long id) {
         return customerQueryMapper.queryCustomerDetails(id);
     }
+
+    @Override
+    public Customer queryCustomerStoreId(String mobile, Long storeId) {
+        return customerQueryMapper.queryCustomerStoreId(mobile,storeId);
+    }
+
+    @Override
+    public void updateCustomer(Long storeId, String mobile) {
+        customerQueryMapper.updateCustomer(mobile,storeId);
+    }
+
 }

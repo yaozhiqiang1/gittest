@@ -26,4 +26,18 @@
         where c.id = #{id}
     </select>
 
+    <resultMap id="customer" type="com.fongwell.satchi.crm.core.customer.domain.aggregate.Customer">
+        <id property="id" column="id"/>
+        <result property="mobile" column="mobile"/>
+        <result property="storeId" column="storeId"/>
+    </resultMap>
+
+    <select id="queryCustomerStoreId" resultMap="customer">
+        select c.id,c.mobile,c.storeid from fw_customer c where c.mobile = #{mobile} and c.storeid = #{storeId}
+    </select>
+
+    <update id="updateCustomer">
+        update fw_customer set storeid = #{storeId} where mobile = #{mobile}
+    </update>
+    
 </mapper>
