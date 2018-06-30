@@ -229,7 +229,6 @@
         </b:constructor-arg>
     </b:bean>
 
-
     <http pattern="/oauth/wx" authentication-manager-ref="clientDetailsAuthenticationManager"
           entry-point-ref="authenticationEntryPoint" create-session="never"
           security-context-repository-ref="securityContextRepository">

@@ -65,6 +65,7 @@ public class WxCustomerAuthenticationFilter extends AntPathMatcherFilter {
                     return;
                 }
             } else {
+
                 String username = (String) ((OAuth2Authentication) authentication).getUserAuthentication().getPrincipal();
                 userDetails = customerAuthenticationService.authenticate(username);
             }

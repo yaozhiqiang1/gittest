@@ -5,6 +5,8 @@ import com.fongwell.satchi.crm.core.customer.query.dto.CustomerDetails;
 import com.fongwell.satchi.crm.core.customer.query.repository.CustomerQueryRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ import java.util.Arrays;
  * Created by docker on 4/27/18.
  */
 @Service("customerAuthenticationService")
-public class CustomerAuthenticationServiceImpl implements CustomerAuthenticationService {
+public class CustomerAuthenticationServiceImpl implements CustomerAuthenticationService{
 
 
     @Resource(name = "customerQueryRepository")

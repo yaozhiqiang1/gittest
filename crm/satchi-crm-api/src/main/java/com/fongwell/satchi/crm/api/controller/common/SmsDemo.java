@@ -7,6 +7,8 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.fongwell.satchi.crm.core.common.resource.SourceType;
+import com.foxinmy.weixin4j.util.StringUtil;
 
 /**
  * 短信发送
@@ -17,7 +19,16 @@ import com.aliyuncs.profile.IClientProfile;
 public class SmsDemo {
 
     public static void main(String[] args) throws Throwable {
-        // 设置超时时间-可自行调整
+
+
+        String s = "sd";
+        String s1 = "";
+
+        System.out.println(StringUtil.isBlank(s));
+        System.out.println(StringUtil.isBlank(s1));
+
+
+     /*   // 设置超时时间-可自行调整
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
         // 初始化ascClient需要的几个参数
@@ -57,7 +68,9 @@ public class SmsDemo {
         }else{
             //请求失败
             System.out.println("发送失败，错误码："+sendSmsResponse.getCode());
-        }
+        }*/
+
+
     }
 }
 
