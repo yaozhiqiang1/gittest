@@ -1,6 +1,5 @@
 package com.fongwell.satchi.crm.api.controller.wx;
 
-import com.fongwell.base.validate.Validate;
 import com.fongwell.satchi.crm.api.Payload;
 import com.fongwell.satchi.crm.api.authentication.wx.WxCustomerContext;
 import com.fongwell.satchi.crm.api.controller.common.SmsUtils;
@@ -12,8 +11,6 @@ import com.fongwell.satchi.crm.core.customer.query.dto.CustomerDetails;
 import com.fongwell.satchi.crm.core.customer.query.mapper.WxCustomerQueryMapper;
 import com.fongwell.satchi.crm.core.customer.query.repository.CustomerQueryRepository;
 import com.fongwell.satchi.crm.core.customer.service.CustomerRegistrationService;
-
-import com.fongwell.satchi.crm.core.homePage.mobileHomePage.domain.aggregate.MobileHomePage;
 import com.fongwell.satchi.crm.core.store.query.AdminStoreQueryMapper;
 import com.fongwell.satchi.crm.wx.account.vo.Result;
 import com.fongwell.satchi.crm.wx.user.binding.WxUserBindingService;
@@ -24,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,7 +28,6 @@ import javax.annotation.Resource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +44,9 @@ public class WxCustomerApi {
   @Autowired
   private WxCustomerQueryMapper wxCustomerQueryMapper;
 
-  @Autowired
+/*  @Autowired
   private AdminStoreQueryMapper adminStoreQueryMapper;
-
+  */
   @Resource(name = "wxUserBindingService")
   private WxUserBindingService wxUserBindingService;
 
@@ -59,7 +54,7 @@ public class WxCustomerApi {
   @Resource(name = "customerQueryRepository")
   private CustomerQueryRepository customerQueryRepository;
 
-//  private HttpSession session;
+  private HttpSession session;
 
     /**
      * 获取微信用户的基本信息
@@ -71,7 +66,7 @@ public class WxCustomerApi {
   }
 
 
-  @GetMapping("/verificationCode")
+ /* @GetMapping("/verificationCode")
   public Payload verificationCode(@RequestParam String codePassword,@RequestParam String mobile,HttpServletRequest request){
 
     HttpSession session = request.getSession();
@@ -95,9 +90,33 @@ public class WxCustomerApi {
       //System.out.println(user.toString());
       return new Payload(map);
     }
-    return new Payload("false");
+    return new Payload(false);
 
-  }
+  }*/
+
+
+    @GetMapping("/verificationCode")
+    public Payload verificationCode(@RequestParam String codePassword,@RequestParam String mobile){
+
+
+        String code = (String) session.getAttribute("code");
+        String mobile1 = (String) session.getAttribute("mobile");
+        if (code == null || mobile == null){
+            return new Payload(false);
+        }
+
+        if (mobile1.equals(mobile) && code.equals(codePassword)){
+            Map map = new HashMap(1, 2f);
+            CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
+            if (customer != null){
+                return new Payload("login");
+            }
+            map.put("verificationCode", true);
+            return new Payload(map);
+        }
+        return new Payload(false);
+
+    }
 
 
 
@@ -110,7 +129,6 @@ public class WxCustomerApi {
 
 
     map.put("loggedin", user != null);
-    System.out.println(user.toString());
     return new Payload(map);
 
   }
@@ -148,17 +166,38 @@ public class WxCustomerApi {
    * @param request 注册信息
    * @param result  结果集
    */
-  @PostMapping("/register")
+/*  @PostMapping("/register")
   @ResponseStatus(HttpStatus.OK)
   @Validate
   public void register(@Valid @RequestBody CustomerRegisterRequest request, BindingResult result) {
+    System.out.println("走了register");
     //注册保存
     Customer newCustomer = customerRegistrationService.register(request);
     if (WxCustomerContext.getWxId() != null) {
       //微信和会员绑定
       wxUserBindingService.bind(WxCustomerContext.getWxId(), newCustomer.getId());
     }
-  }
+  }*/
+
+
+
+
+  @PostMapping("/register")
+  public Payload register(@RequestBody CustomerRegisterRequest request) {
+      if (request != null) {
+          //注册保存
+          Customer newCustomer = customerRegistrationService.register(request);
+          if (WxCustomerContext.getWxId() != null) {
+              //微信和会员绑定
+              wxUserBindingService.bind(WxCustomerContext.getWxId(), newCustomer.getId());
+          }
+          return new Payload(true);
+      }
+      return new Payload(false);
+   }
+
+
+
 
   /**
    * 短信验证
@@ -166,10 +205,9 @@ public class WxCustomerApi {
   @PostMapping("/sendSms")
   public Result sendSms(@RequestBody CustomerRegisterRequest customerRegisterRequest, HttpServletRequest request){
 
-    HttpSession session = request.getSession();
+    session = request.getSession();
     String mobile = customerRegisterRequest.getMobile();
-    System.out.println(mobile +"============================================================");
-    System.out.println(!StringUtil.isBlank(mobile));
+
     if(!StringUtil.isBlank(mobile)) {
         String code = RandomStringUtils.randomNumeric(4);
         System.out.println("code +++" + code);
@@ -183,7 +221,7 @@ public class WxCustomerApi {
     return Result.fail("验证失败");
   }
 
-  @PostMapping("/bindingStore")
+/*  @PostMapping("/bindingStore")
   public Payload bindingStore(@RequestParam Long storeId){
       //检查用户登录信息是不是用户会员id还是微信id
     String mobile = WxCustomerContext.getUser().getUsername();
@@ -199,7 +237,7 @@ public class WxCustomerApi {
       return new Payload("绑定成功");
     }
     return new Payload("null");
-  }
+  }*/
 
 //  @PostMapping("/test")
 //  public void test(@RequestParam String mobile ,@RequestParam Long storeId){ Customer customer = customerQueryRepository.queryCustomerStoreId(mobile,storeId);

@@ -297,7 +297,8 @@
 
 
         <intercept-url pattern="/api/wx/login" access="hasRole('ROLE_WX_USER')"/>
-        <intercept-url pattern="/api/wx/register" access="hasRole('ROLE_WX_USER')"/>
+        <!--<intercept-url pattern="/api/wx/register" access="hasRole('ROLE_WX_USER')"/>-->
+       <!-- <intercept-url pattern="/api/wx/register" access="hasAnyRole('ROLE_WX_USER','ROLE_CUSTOMER')"/>-->
         <intercept-url pattern="/api/wx/info" access="hasAnyRole('ROLE_WX_USER','ROLE_CUSTOMER')"/>
 
         <intercept-url pattern="/api/wx/**" access="permitAll()"/>

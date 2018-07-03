@@ -36,7 +36,7 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
             throw new DuplicateCustomerMobileException("Duplicate mobile:" + request.getMobile());
         }
 
-        customer = new Customer(generateCustomerNumberService.generate(), request.getName(), request.getMobile(), request.getPassword() == null ? null : passwordEncoder.encode(request.getPassword()));
+        customer = new Customer(generateCustomerNumberService.generate(), request.getName(), request.getMobile());
         customer.setDob(request.getDob());
         customer.setSex(request.getSex());
 

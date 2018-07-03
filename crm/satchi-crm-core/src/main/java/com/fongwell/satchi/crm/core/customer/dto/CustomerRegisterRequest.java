@@ -16,7 +16,9 @@ public class CustomerRegisterRequest implements Serializable {
     private String name;
     @NotEmpty(message = "mobile.empty")
     private String mobile;
-    private String password;
+//
+//    private String password;
+
 
     private Date dob;
 
@@ -46,13 +48,15 @@ public class CustomerRegisterRequest implements Serializable {
         this.mobile = mobile;
     }
 
-    public String getPassword() {
-        return password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(final String password) {
+//        this.password = password;
 
-    public void setPassword(final String password) {
-        this.password = password;
-    }
+
+//    }
 
     public Date getDob() {
         return dob;
@@ -61,4 +65,6 @@ public class CustomerRegisterRequest implements Serializable {
     public void setDob(final Date dob) {
         this.dob = dob;
     }
+
+
 }
