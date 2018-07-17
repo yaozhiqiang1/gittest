@@ -54,4 +54,12 @@ public class Shipping extends AbstractAggregateRoot {
     public void setTrackingNumber(final String trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
+
+    public AddressValue getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressValue address) {
+        this.address = address;
+    }
 }

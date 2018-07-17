@@ -61,11 +61,11 @@ wx:
         accounts:
           test:
             appId: wx7a2d5fcb771ecf37
-            appSecret: 7edaceb41074802c89ca63fe5fbf3f58
-            #appId: wxcaf3ca475beb17f7
-            #appSecret: be4f2a1424b3bbbff633a1e925078f63
+            appSecret: 40c50e8ddaa929e78e33d1ab692642c6
+#            appId: wxcaf3ca475beb17f7
+#            appSecret: be4f2a1424b3bbbff633a1e925078f63
   pay:
-    enabled: false
+    enabled: true
     notifyUrl: http://local.ngrok.fongwell.com/api/wxpay/notify
     account:
       repository:
@@ -74,7 +74,7 @@ wx:
           accounts:
             test:
               appId: wx7a2d5fcb771ecf37
-              appSecret: 7edaceb41074802c89ca63fe5fbf3f58
+              appSecret: 40c50e8ddaa929e78e33d1ab692642c6
               mchId: 1313837101
               paySignKey: 2ab9071b06b9f739b950ddb41db2690d
 

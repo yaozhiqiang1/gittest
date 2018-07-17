@@ -1,5 +1,6 @@
 package com.fongwell.satchi.crm.core.product.domain.aggregate.entity;
 
+import com.fongwell.satchi.crm.core.support.ddd.AggregateRoot;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,9 +11,9 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "crm_sku", indexes = {@Index(name = "crm_sku_number_idx", columnList = "number")})
-public class Sku {
+public class Sku{
 
-    @Id
+        @Id
     @GenericGenerator(name = "snowflake", strategy = "com.fongwell.satchi.crm.core.support.jpa.hibernate.SnowflakeIdGenerator")
     @GeneratedValue(generator = "snowflake")
     private Long id;
@@ -32,10 +33,15 @@ public class Sku {
             .LAZY, orphanRemoval = true)
     private Inventory inventory;
 
-    public Sku() {
-    }
-
     public Sku(String number, BigDecimal price, BigDecimal originalPrice, Integer credit, Long product, Integer inventory) {
+        super();
+        this.number = number;
+        this.product = product;
+        this.price = price;
+        this.originalPrice = originalPrice;
+        this.inventory = new Inventory(id, inventory);
+    }
+    public Sku(Long id,String number, BigDecimal price, BigDecimal originalPrice, Integer credit, Long product, Integer inventory) {
         super();
         this.number = number;
         this.product = product;
@@ -49,6 +55,8 @@ public class Sku {
         this.price = price;
         this.originalPrice = originalPrice;
         this.inventory.setInventory(inventory);
+    }
+    public Sku() {
     }
 
     public String getNumber() {
@@ -73,5 +81,37 @@ public class Sku {
 
     public Integer getCredit() {
         return credit;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public void setProduct(Long product) {
+        this.product = product;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setOriginalPrice(BigDecimal originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 }

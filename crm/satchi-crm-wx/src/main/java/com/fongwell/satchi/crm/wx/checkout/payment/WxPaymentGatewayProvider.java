@@ -9,7 +9,9 @@ import com.fongwell.support.utils.Assert;
 import com.foxinmy.weixin4j.exception.WeixinException;
 import com.foxinmy.weixin4j.payment.WeixinPayProxy;
 import com.foxinmy.weixin4j.payment.mch.MchPayRequest;
+import com.mchange.lang.ShortUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -50,27 +52,35 @@ public class WxPaymentGatewayProvider implements PaymentGatewayProvider {
     private WxPayAccountRepository wxPayAccountRepository;
 
 
+
     @Override
     public Object initCheckout(final PaymentGatewayCheckoutRequest request) {
-
+        System.out.println("enabled" + enabled);
         if (enabled) {
-
+            //获取实体类的map属性
             Map data = request.getData();
             Assert.notNull(data, "data");
+            //获取微信支付
             WxPaymentGatewayRequest wxPayRequest = (WxPaymentGatewayRequest) request.getData().get("wxpay");
 
+            System.out.println("date=" + request.getData() + "  " + "wxPayRequest = " + request.getData().get("wxpay"));
+
             Assert.notNull(wxPayRequest, "wxpay data");
+            System.out.println("-------------------------------OpenId ====" + wxPayRequest.getOpenId());
             Assert.notNull(wxPayRequest.getOpenId(), "openId");
 
 
             if (wxPayRequest.getCreateIp() == null) {
                 wxPayRequest.setCreateIp(IP);
             }
+            //保留两位小数
             request.setAmount(new BigDecimal("0.01"));
             try {
+                //wxPayAccountRepository.findAccount(wxPayRequest.getClient())).createJSPayRequest(wxPayRequest.getOpenId(), wxPayRequest.getBody(), String.valueOf(request.getOrderId())
                 MchPayRequest jsPayRequest = new WeixinPayProxy(wxPayAccountRepository.findAccount(wxPayRequest.getClient())).createJSPayRequest(wxPayRequest.getOpenId(), wxPayRequest.getBody(), String.valueOf(request.getOrderId()) + "_" + System.currentTimeMillis(),
                         request.getAmount().doubleValue(), wxPayRequest.getNotifyUrl(), wxPayRequest.getCreateIp(), wxPayRequest.getAttach());
 
+                System.out.println("jsPayRequest.toRequestObject的值" + jsPayRequest.toRequestObject());
 
                 return jsPayRequest.toRequestObject();
             } catch (WeixinException e) {
@@ -96,4 +106,5 @@ public class WxPaymentGatewayProvider implements PaymentGatewayProvider {
     public String getSupportedType() {
         return "wx";
     }
+
 }

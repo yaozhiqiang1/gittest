@@ -38,134 +38,109 @@ import java.util.Map;
 @RequestMapping("/api/wx")
 public class WxCustomerApi {
 
-   @Autowired
-  private CustomerRegistrationService customerRegistrationService;
+    @Autowired
+    private CustomerRegistrationService customerRegistrationService;
 
-  @Autowired
-  private WxCustomerQueryMapper wxCustomerQueryMapper;
+    @Autowired
+    private WxCustomerQueryMapper wxCustomerQueryMapper;
 
-/*  @Autowired
-  private AdminStoreQueryMapper adminStoreQueryMapper;
-  */
-  @Resource(name = "wxUserBindingService")
-  private WxUserBindingService wxUserBindingService;
+    /*  @Autowired
+      private AdminStoreQueryMapper adminStoreQueryMapper;
+      */
+    @Resource(name = "wxUserBindingService")
+    private WxUserBindingService wxUserBindingService;
 
 
-  @Resource(name = "customerQueryRepository")
-  private CustomerQueryRepository customerQueryRepository;
+    @Resource(name = "customerQueryRepository")
+    private CustomerQueryRepository customerQueryRepository;
 
-  private HttpSession session;
+    private HttpSession session;
 
     /**
      * 获取微信用户的基本信息
+     *
      * @return
      */
-  @GetMapping("/profile")
-  public Payload profile() {
-    return new Payload(wxCustomerQueryMapper.queryProfile(WxCustomerContext.getUser().getCustomerId()));
-  }
-
-
- /* @GetMapping("/verificationCode")
-  public Payload verificationCode(@RequestParam String codePassword,@RequestParam String mobile,HttpServletRequest request){
-
-    HttpSession session = request.getSession();
-
-    System.out.println("xxxxxxxxxxxx走了");
-    String code = (String) session.getAttribute("code");
-    String mobile1 = (String) session.getAttribute("mobile");
-    System.out.println("code+mobile" + code +"  "+ mobile1);
-    if (code == null || mobile == null){
-      System.out.println("验证码是否已经存入session" + code);
-      return new Payload(false);
+    @GetMapping("/profile")
+    public Payload profile() {
+        return new Payload(wxCustomerQueryMapper.queryProfile(WxCustomerContext.getUser().getCustomerId()));
     }
-
-    if (mobile1.equals(mobile) && code.equals(codePassword)){
-      Map map = new HashMap(1, 2f);
-      CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
-      if (customer != null){
-       return new Payload("login");
-      }
-      map.put("verificationCode", true);
-      //System.out.println(user.toString());
-      return new Payload(map);
-    }
-    return new Payload(false);
-
-  }*/
-
 
     @GetMapping("/verificationCode")
-    public Payload verificationCode(@RequestParam String codePassword,@RequestParam String mobile){
+    public Payload verificationCode(@RequestParam String codePassword, @RequestParam String mobile) {
 
 
-        String code = (String) session.getAttribute("code");
-        String mobile1 = (String) session.getAttribute("mobile");
-        if (code == null || mobile == null){
-            return new Payload(false);
-        }
-
-        if (mobile1.equals(mobile) && code.equals(codePassword)){
-            Map map = new HashMap(1, 2f);
-            CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
-            if (customer != null){
-                return new Payload("login");
+        try {
+            String code = (String) session.getAttribute("code");
+            String mobile1 = (String) session.getAttribute("mobile");
+            if (code == null || mobile == null) {
+                return new Payload(false);
             }
-            map.put("verificationCode", true);
-            return new Payload(map);
+
+            if (mobile1.equals(mobile) && code.equals(codePassword)) {
+                Map map = new HashMap(1, 2f);
+                CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
+                if (customer != null) {
+                    return new Payload("login");
+                }
+                map.put("verificationCode", true);
+                return new Payload(map);
+            }
+            return new Payload(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Payload("验证码失效");
         }
-        return new Payload(false);
-
     }
 
 
+    @GetMapping("/info")
+    public Payload info() {
 
-  @GetMapping("/info")
-  public Payload info() {
-
-    Map map = new HashMap(1, 2f);
-    CustomerAuthenticationDetails user = WxCustomerContext.getUser();
-
+        Map map = new HashMap(1, 2f);
+        CustomerAuthenticationDetails user = WxCustomerContext.getUser();
 
 
-    map.put("loggedin", user != null);
-    return new Payload(map);
+        map.put("loggedin", user != null);
+        return new Payload(map);
 
-  }
-
-  /**
-   * 登录并绑定用户
-   * @param mobile 手机号
-   */
-  @PostMapping("/login")
-  @ResponseStatus(HttpStatus.OK)
-  public Payload login(@RequestParam String mobile) {
-
-
-    CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
-    if (customer == null) {
-      throw new DataNotFoundException("customer not found: " + mobile);
-    } else {
-      //绑定用户
-      wxUserBindingService.bind(WxCustomerContext.getWxId(), customer.getId());
-    }
-    return new Payload("true");
-  }
-
-  @PostMapping
-  @ResponseStatus(HttpStatus.OK)
-  public void unbind() {
-    if (WxCustomerContext.getWxId() != null) {
-      wxUserBindingService.unbind(WxCustomerContext.getWxId());
     }
 
-  }
+    /**
+     * 登录并绑定用户
+     *
+     * @param mobile 手机号
+     */
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public Payload login(@RequestParam String mobile) {
 
-  /**
-   * 注册并绑定用户
-   * @param request 注册信息
-   * @param result  结果集
-   */
+
+        CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
+        if (customer == null) {
+            throw new DataNotFoundException("customer not found: " + mobile);
+        } else {
+            //绑定用户
+            wxUserBindingService.bind(WxCustomerContext.getWxId(), customer.getId());
+        }
+        return new Payload("true");
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void unbind() {
+        if (WxCustomerContext.getWxId() != null) {
+            wxUserBindingService.unbind(WxCustomerContext.getWxId());
+        }
+
+    }
+
+    /**
+     * 注册并绑定用户
+     *
+     * @param request 注册信息
+     * @param result  结果集
+     */
 /*  @PostMapping("/register")
   @ResponseStatus(HttpStatus.OK)
   @Validate
@@ -178,48 +153,43 @@ public class WxCustomerApi {
       wxUserBindingService.bind(WxCustomerContext.getWxId(), newCustomer.getId());
     }
   }*/
-
-
-
-
-  @PostMapping("/register")
-  public Payload register(@RequestBody CustomerRegisterRequest request) {
-      if (request != null) {
-          //注册保存
-          Customer newCustomer = customerRegistrationService.register(request);
-          if (WxCustomerContext.getWxId() != null) {
-              //微信和会员绑定
-              wxUserBindingService.bind(WxCustomerContext.getWxId(), newCustomer.getId());
-          }
-          return new Payload(true);
-      }
-      return new Payload(false);
-   }
-
-
-
-
-  /**
-   * 短信验证
-   */
-  @PostMapping("/sendSms")
-  public Result sendSms(@RequestBody CustomerRegisterRequest customerRegisterRequest, HttpServletRequest request){
-
-    session = request.getSession();
-    String mobile = customerRegisterRequest.getMobile();
-
-    if(!StringUtil.isBlank(mobile)) {
-        String code = RandomStringUtils.randomNumeric(4);
-        System.out.println("code +++" + code);
-        //session = request.getSession();
-        session.setAttribute("mobile",mobile);
-        session.setAttribute("code", code);
-        //调用短信工具发送短信
-        SmsUtils.sendMsg(mobile, "yaozhiqiang", "SMS_137830227", "{\"code\":\"" + code + "\"}");
-        return Result.ok("验证成功");
+    @PostMapping("/register")
+    public Payload register(@RequestBody CustomerRegisterRequest request) {
+        if (request != null) {
+            //注册保存
+            Customer newCustomer = customerRegistrationService.register(request);
+            if (WxCustomerContext.getWxId() != null) {
+                //微信和会员绑定
+                wxUserBindingService.bind(WxCustomerContext.getWxId(), newCustomer.getId());
+            }
+            return new Payload(true);
+        }
+        return new Payload(false);
     }
-    return Result.fail("验证失败");
-  }
+
+
+    /**
+     * 短信验证
+     */
+    @PostMapping("/sendSms")
+    public Result sendSms(@RequestBody CustomerRegisterRequest customerRegisterRequest, HttpServletRequest request) {
+
+        session = request.getSession();
+        session.setMaxInactiveInterval(20);
+        String mobile = customerRegisterRequest.getMobile();
+
+        if (!StringUtil.isBlank(mobile)) {
+            String code = RandomStringUtils.randomNumeric(4);
+            System.out.println("code +++" + code);
+            //session = request.getSession();
+            session.setAttribute("mobile", mobile);
+            session.setAttribute("code", code);
+            //调用短信工具发送短信
+            SmsUtils.sendMsg(mobile, "yaozhiqiang", "SMS_137830227", "{\"code\":\"" + code + "\"}");
+            return Result.ok("验证成功");
+        }
+        return Result.fail("验证失败");
+    }
 
 /*  @PostMapping("/bindingStore")
   public Payload bindingStore(@RequestParam Long storeId){
@@ -245,7 +215,7 @@ public class WxCustomerApi {
 //      Map map = adminStoreQueryMapper.get(storeId);
 //      String name = (String) map.get("name");
 //     customerQueryRepository.updateCustomer(storeId,mobile);
-//     System.out.println("name===" + name);*/
+//     System.out.println("name===" + name);
 //  }
 
 }

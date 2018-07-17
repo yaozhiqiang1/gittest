@@ -59,17 +59,24 @@ public class WxCheckoutApi {
 
     }
 
+    /**
+     * 启动支付
+     * @param request
+     * @param result
+     * @return
+     */
     @PostMapping("/checkout/initPayment")
     @Validate
     public Payload initPayment(@Valid
                                @RequestBody PaymentGatewayCheckoutRequest request, BindingResult result) {
 
         Map data = new HashMap();
-
+        //微信支付请求的实体类
         WxPaymentGatewayRequest wxPaymentGatewayRequest = new WxPaymentGatewayRequest();
         wxPaymentGatewayRequest.setOpenId(WxCustomerContext.getWxId());
-        // wxPaymentGatewayRequest.setOpenId("opreGjr2hzDBBpkgYIzpjfYy5iTU");
+        // wxPaymentGatewayRequest.setOpenId("opreGjr2hzDBBpkgYIzpjfYy5iTU");  wxDefaultClient === test
         wxPaymentGatewayRequest.setClient(wxDefaultClient);
+        //http://local.ngrok.fongwell.com/api/wxpay/notify/test
         wxPaymentGatewayRequest.setNotifyUrl(wxPayNotifyUrl + "/" + wxDefaultClient);
         wxPaymentGatewayRequest.setBody("test");
         data.put("wxpay", wxPaymentGatewayRequest);

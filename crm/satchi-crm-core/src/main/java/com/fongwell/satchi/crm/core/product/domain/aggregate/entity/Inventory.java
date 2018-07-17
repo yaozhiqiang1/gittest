@@ -1,10 +1,9 @@
 package com.fongwell.satchi.crm.core.product.domain.aggregate.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Created by roman on 18-4-3.
@@ -59,5 +58,33 @@ public class Inventory {
 
     public Long getSku() {
         return sku;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getLastmodifiedDate() {
+        return lastmodifiedDate;
+    }
+
+    public void setLastmodifiedDate(Date lastmodifiedDate) {
+        this.lastmodifiedDate = lastmodifiedDate;
+    }
+
+    public void setSku(Long sku) {
+        this.sku = sku;
     }
 }

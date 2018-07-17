@@ -1,6 +1,8 @@
 package com.fongwell.satchi.crm.api.controller.admin;
 
 import com.fongwell.satchi.crm.api.Payload;
+import com.fongwell.satchi.crm.core.customer.domain.value.AddressValue;
+import com.fongwell.satchi.crm.core.order.domain.aggregate.Shipping;
 import com.fongwell.satchi.crm.core.order.domain.dto.ShippingRequest;
 import com.fongwell.satchi.crm.core.order.domain.value.OrderState;
 import com.fongwell.satchi.crm.core.order.query.mapper.AdminOrderQueryMapper;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by docker on 5/7/18.
@@ -61,7 +64,9 @@ public class OrderApi {
 
     @GetMapping("/{id}")
     public Payload get(@PathVariable long id) {
-        return new Payload(adminOrderQueryMapper.findOrder(id));
+
+        final Map order = adminOrderQueryMapper.findOrder(id);
+        return new Payload(order);
     }
 
     @GetMapping("/count")
@@ -76,4 +81,6 @@ public class OrderApi {
         return new Payload(adminOrderQueryMapper.countOrders(states, startDate, endDate));
 
     }
+
+
 }

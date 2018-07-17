@@ -5,10 +5,12 @@ import com.fongwell.satchi.crm.api.authentication.wx.WxCustomerContext;
 import com.fongwell.satchi.crm.core.customer.dto.AddressDto;
 import com.fongwell.satchi.crm.core.customer.query.repository.CustomerAddressQueryRepository;
 import com.fongwell.satchi.crm.core.customer.service.CustomerAddressService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 
 /**
  * Created by docker on 4/23/18.
@@ -25,8 +27,13 @@ public class WxAddressApi {
 
     @GetMapping("")
     public Payload addresses() {
-
-        return new Payload(customerAddressQueryRepository.queryAddreses(WxCustomerContext.getUser().getCustomerId()));
+        Collection<AddressDto> addressDtos = customerAddressQueryRepository.queryAddreses(WxCustomerContext.getUser().getCustomerId());
+        for (AddressDto addressDto : addressDtos) {
+            if (!StringUtils.isNotBlank(addressDto.getDistrict())){
+                addressDto.setDistrict("");
+            }
+        }
+        return new Payload(addressDtos);
     }
 
     @PutMapping("")
@@ -52,6 +59,7 @@ public class WxAddressApi {
         address.setId(id);
         customerAddressService.updateAddress(WxCustomerContext.getUser().getCustomerId(), address);
     }
+
 
 
 }

@@ -149,4 +149,36 @@ public class Order extends AbstractAggregateRoot {
     public void setShippingAddress(final AddressValue shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setItems(Collection<OrderItem> items) {
+        this.items = items;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setSalePrice(BigDecimal salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public Collection<OrderPayment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(Collection<OrderPayment> payments) {
+        this.payments = payments;
+    }
+
+    public String getPaymentGatewayType() {
+        return paymentGatewayType;
+    }
+
+    public void setPaymentGatewayType(String paymentGatewayType) {
+        this.paymentGatewayType = paymentGatewayType;
+    }
 }

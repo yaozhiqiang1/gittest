@@ -42,6 +42,7 @@ public class WxConfigApi {
             jssdkConfigurator.debugMode();
         }
         return new Payload(jssdkConfigurator.toJSONConfig(request.getUrl()));
+
     }
 
     public static class JssdkRequest implements Serializable {

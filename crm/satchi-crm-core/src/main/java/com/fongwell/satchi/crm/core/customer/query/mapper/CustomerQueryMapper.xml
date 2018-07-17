@@ -39,5 +39,13 @@
     <update id="updateCustomer">
         update fw_customer set storeid = #{storeId} where mobile = #{mobile}
     </update>
-    
+
+    <select id="queryByMobile" resultType="long">
+        select c.id from fw_customer c where c.mobile = #{mobile}
+    </select>
+
+    <select id="queryCheckindate" resultType="date">
+        select checkindate from crm_customer_credit where customerid = #{customerId};
+    </select>
+
 </mapper>

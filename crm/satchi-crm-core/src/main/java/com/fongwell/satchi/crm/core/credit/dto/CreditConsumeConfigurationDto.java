@@ -17,13 +17,12 @@ public class CreditConsumeConfigurationDto implements Serializable {
     private Integer credit;//积分
 
     @NotNull(message = "consume.cash.required")
-    private BigDecimal cash;
+    private BigDecimal cash; //消费现金
 
-    private Boolean enabled;
+    private Boolean enabled; //是否开启
 
-    private Integer maxCreditPerOrder;
-
-    private Integer maxDiscountPercentage;
+    private Integer maxCreditPerOrder; //每笔消费最多可使用多少积分
+    private Integer maxDiscountPercentage; //每笔消费最多抵扣总金额
 
     @NotNull(message = "consume.consumeOption.required")
     private ConsumeOption option;

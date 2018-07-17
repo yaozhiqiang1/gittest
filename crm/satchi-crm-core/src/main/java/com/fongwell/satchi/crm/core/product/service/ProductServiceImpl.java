@@ -1,25 +1,29 @@
 package com.fongwell.satchi.crm.core.product.service;
 
+import com.fongwell.base.rest.Payload;
 import com.fongwell.infrastructure.event.publish.EventPublisher;
 import com.fongwell.satchi.crm.core.common.State;
 import com.fongwell.satchi.crm.core.common.error.DataNotFoundException;
 import com.fongwell.satchi.crm.core.common.error.DuplicateParameterException;
+import com.fongwell.satchi.crm.core.order.domain.entity.OrderItem;
+import com.fongwell.satchi.crm.core.order.query.mapper.OrderItemMapper;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.Product;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSettings;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.Sku;
 import com.fongwell.satchi.crm.core.product.dto.ProductData;
+import com.fongwell.satchi.crm.core.product.query.ProductMapper;
+import com.fongwell.satchi.crm.core.product.query.ProductQueryMapper;
 import com.fongwell.satchi.crm.core.product.repository.ProductRepository;
 import com.fongwell.satchi.crm.core.product.service.event.ProductDisableEvent;
 import com.fongwell.satchi.crm.core.product.service.event.ProductEnableEvent;
+import com.fongwell.satchi.crm.core.product.value.ProductRestrictionType;
+import com.fongwell.satchi.crm.core.product.value.ProductType;
 import com.fongwell.satchi.crm.core.support.ddd.AggregateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by roman on 18-4-3.
@@ -36,6 +40,29 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private EventPublisher eventPublisher;
 
+    @Autowired
+    private ProductQueryMapper productQueryMapper;
+
+    @Autowired
+    private ProductMapper productMapper;
+
+    @Autowired
+    private OrderItemMapper orderItemMapper;
+
+  /*  @Override
+    public Long onCreate(ProductData data) {
+        Product numberProduct = productRepository.findByNumber(data.getNumber());
+        if (numberProduct != null) {
+            throw new DuplicateParameterException("product.number duplicate :" + data.getNumber());
+        }
+        Product product = aggregateFactory.createAggregate(data, Product.class);
+        product.fixImages();
+        ProductSettings settings = product.onSettings();
+        product.setItems(Collections.singletonList(new Sku(product.getNumber(), settings.getPrice(), settings.getOriginalPrice(), settings.getCredit(), product.getId(), data.getInventory())));
+        productRepository.save(product);
+        return product.getId();
+    }*/
+
     @Override
     public Long onCreate(ProductData data) {
         Product numberProduct = productRepository.findByNumber(data.getNumber());
@@ -43,10 +70,16 @@ public class ProductServiceImpl implements ProductService {
             throw new DuplicateParameterException("product.number duplicate :" + data.getNumber());
         }
         Product product = aggregateFactory.createAggregate(data, Product.class);
-
         product.fixImages();
         ProductSettings settings = product.onSettings();
-        product.setItems(Collections.singletonList(new Sku(product.getNumber(), settings.getPrice(), settings.getOriginalPrice(), settings.getCredit(), product.getId(), data.getInventory())));
+        int a[] = new int[10];
+        String id = "";
+        for(int i=0;i<a.length;i++ ) {
+            a[i] = (int)(10*(Math.random()));
+            id+=a[i]+"";
+        }
+        Long sid = Long.parseLong(id);
+        product.setItems(Collections.singletonList(new Sku(sid,product.getNumber(),settings.getPrice(), settings.getOriginalPrice(), settings.getCredit(), product.getId(), data.getInventory())));
         productRepository.save(product);
         return product.getId();
     }
@@ -134,4 +167,56 @@ public class ProductServiceImpl implements ProductService {
         one.setOrderNumber(orderNumber);
         productRepository.save(one);
     }
+
+    /**
+     * 跟新礼品状态
+     * @param date
+     */
+    @Override
+    public void updateProductStatus(Date date) {
+      List<Map> list = productQueryMapper.queryProductSettings();
+        for (Map map : list) {
+            Date startDate = (Date) map.get("startDate");
+            Date endDate = (Date) map.get("endDate");
+            long productId = (long) map.get("productId");
+                if ((startDate != null) && (endDate != null)) {
+                    if (startDate.compareTo(endDate) != 0 && startDate.compareTo(date) < 0 && endDate.compareTo(date) > -1) {
+                        productMapper.updateStateEnable(productId);
+                    }
+                    if (startDate.compareTo(endDate) != 0 && startDate.compareTo(date) > 0 || endDate.compareTo(date) < 0) {
+                        productMapper.updateStateDisable(productId);
+                    }
+                }
+            }
+        }
+
+    /**
+     * 限制礼品的购买
+     * todo orderItem里面没有限制的订单号
+     * @param orderItem
+     */
+    @Override
+    public Payload restrictionamountGift(OrderItem orderItem) {
+        long productId = orderItem.getProductId();
+        ProductSettings productSettings = productQueryMapper.queryByIdProductSettings(productId);
+        ProductType type = productSettings.getType();
+        if(ProductType.GIFT.equals(type)){
+            if (productSettings.getRestrictionType().equals(ProductRestrictionType.ORDER)){
+                int restrictionAmount = productSettings.getRestrictionAmount();
+                int quantity = orderItem.getQuantity();
+                return new Payload(quantity <= restrictionAmount);
+            }
+            if (productSettings.getRestrictionType().equals(ProductRestrictionType.VIP)){
+                List<Integer> list =orderItemMapper.queryQuantityList(orderItem.getProductId());
+                Integer total = 0;
+                for (Integer integer : list) {
+                    total = total + integer;
+                }
+                return new Payload(productSettings.getRestrictionAmount() >= total + orderItem.getQuantity());
+            }
+        }
+        return null;
+    }
+
 }
+

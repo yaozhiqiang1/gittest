@@ -15,7 +15,7 @@ public class WxCustomerContext {
      */
     public static final CustomerAuthenticationDetails getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        System.out.println("authentication:==" + authentication);
         if (authentication.getPrincipal() instanceof CustomerAuthenticationDetails) {
             return (CustomerAuthenticationDetails) authentication.getPrincipal();
         }

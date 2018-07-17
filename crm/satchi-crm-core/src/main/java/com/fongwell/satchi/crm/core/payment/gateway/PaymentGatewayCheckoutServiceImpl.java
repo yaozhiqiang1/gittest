@@ -28,11 +28,13 @@ public class PaymentGatewayCheckoutServiceImpl implements PaymentGatewayCheckout
 
         Order order = orderRepository.findOne(request.getOrderId());
         Assert.notNull(order, "order");
+        //获取价格
         request.setAmount(order.getSalePrice());
 
 
         for (final PaymentGatewayProvider paymentGatewayProvider : gatewayProviders.values()) {
             if (paymentGatewayProvider.getSupportedType().equals(request.getGatewayType())) {
+                System.out.println("supportedType = " + paymentGatewayProvider.getSupportedType() + "   " + "getGatewayType" + request.getGatewayType());
                 return paymentGatewayProvider.initCheckout(request);
             }
         }

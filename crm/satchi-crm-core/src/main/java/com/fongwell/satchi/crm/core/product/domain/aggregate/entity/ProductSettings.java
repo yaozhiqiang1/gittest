@@ -42,6 +42,53 @@ public class ProductSettings {
 
     private Integer credit;
 
+    private long productid;
+
+    public long getProductid() {
+        return productid;
+    }
+
+    public void setProductid(long productid) {
+        this.productid = productid;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setType(ProductType type) {
+        this.type = type;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setOriginalPrice(BigDecimal originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setRestrictionType(ProductRestrictionType restrictionType) {
+        this.restrictionType = restrictionType;
+    }
+
+    public void setRestrictionAmount(int restrictionAmount) {
+        this.restrictionAmount = restrictionAmount;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+
     public ProductSettings() {
     }
 
@@ -88,4 +135,5 @@ public class ProductSettings {
     public int getRestrictionAmount() {
         return restrictionAmount;
     }
+
 }

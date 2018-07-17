@@ -42,6 +42,7 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
 
         customerRepository.save(customer);
 
+
         return customer;
 
     }
