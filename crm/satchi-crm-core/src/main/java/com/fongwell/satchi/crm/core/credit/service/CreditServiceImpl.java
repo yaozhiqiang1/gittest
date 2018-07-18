@@ -12,6 +12,7 @@ import com.fongwell.satchi.crm.core.credit.repository.CreditConfigurationReposit
 import com.fongwell.satchi.crm.core.credit.repository.CustomerCreditRecordRepository;
 import com.fongwell.satchi.crm.core.credit.repository.CustomerCreditReposistory;
 import com.fongwell.satchi.crm.core.customer.query.mapper.CustomerQueryMapper;
+import com.fongwell.satchi.crm.core.product.dto.GifiCreditOrderDto;
 import com.fongwell.satchi.crm.core.product.service.ProductServiceImpl;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,6 @@ public class CreditServiceImpl implements CreditService {
 
     @Autowired
     private CustomerQueryMapper customerQueryMapper;
-
 
     @Override
     public Integer getCurrentlyAvailableCredits(final long customerId, final Date now) {
@@ -115,6 +115,9 @@ public class CreditServiceImpl implements CreditService {
      */
     @Override
     public void saveCustomerConsumptionRecord(CustomerCreditRecord customerCreditRecord, long customerId) {
+
+
+
         Boolean creditConfigEnabled = creditQueryMapper.queryEnabled();
         if (creditConfigEnabled) {
             Long orderid = customerCreditRecord.getOrderid();
@@ -214,7 +217,7 @@ public class CreditServiceImpl implements CreditService {
      */
     @Override
     public boolean queryCheckindate(long customerId) {
-         Date date = customerQueryMapper.queryCheckindate(customerId);
+        Date date = customerQueryMapper.queryCheckindate(customerId);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DATE,1);
@@ -225,6 +228,25 @@ public class CreditServiceImpl implements CreditService {
 
     }
 
+
+    /**
+     * 客户购买礼品时消费的积分
+     * @param gifiCreditOrderDto
+     * @return
+     */
+    @Override
+    public Boolean purchaseGiftCredit(GifiCreditOrderDto gifiCreditOrderDto, long customerId) {
+        Integer customerCreditTotal = creditQueryMapper.customerCreditTotal(customerId);
+        if (customerCreditTotal < gifiCreditOrderDto.getCredit()){
+            return false;
+        }
+        creditUpdateMapper.creditUpdate(customerId, customerCreditTotal - gifiCreditOrderDto.getCredit());
+        CustomerCreditRecord newCustomerCreditRecord =
+                new CustomerCreditRecord(customerId, gifiCreditOrderDto.getOrderid(), gifiCreditOrderDto.getPrice(), gifiCreditOrderDto.getCredit(), CreditType.use, "PURCHASE");
+        newCustomerCreditRecord.setCustomerid(customerId);
+        customerCreditRecordRepository.save(newCustomerCreditRecord);
+        return true;
+    }
 
 
     public Integer getConsumptionCredits(CreditConsumeConfiguration creditConsumeConfiguration,Integer customerCreditTotal,BigDecimal price){

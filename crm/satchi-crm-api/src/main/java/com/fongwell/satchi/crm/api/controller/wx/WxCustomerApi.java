@@ -44,9 +44,8 @@ public class WxCustomerApi {
     @Autowired
     private WxCustomerQueryMapper wxCustomerQueryMapper;
 
-    /*  @Autowired
+      @Autowired
       private AdminStoreQueryMapper adminStoreQueryMapper;
-      */
     @Resource(name = "wxUserBindingService")
     private WxUserBindingService wxUserBindingService;
 
@@ -191,23 +190,41 @@ public class WxCustomerApi {
         return Result.fail("验证失败");
     }
 
-/*  @PostMapping("/bindingStore")
-  public Payload bindingStore(@RequestParam Long storeId){
+    /**
+     * 重新绑定
+     * @param storeId
+     */
+    @GetMapping("/againBindingStore")
+    public void againBindingStore(@RequestParam Long storeId){
+//        long customerId = WxCustomerContext.getUser().getCustomerId();
+        long customerId = 3905997475673344L;
+         customerQueryRepository.updateCustomer(customerId,storeId);
+    }
+
+    /**
+     * 扫码绑定萌门店
+     * @param storeId
+     * @return
+     */
+  @GetMapping("/bindingStore")
+  public Payload bindingStore(){
       //检查用户登录信息是不是用户会员id还是微信id
-    String mobile = WxCustomerContext.getUser().getUsername();
-    System.out.println("用户登录信息id" + mobile);
-    if (StringUtils.isNotBlank(mobile)){
-      Customer customer = customerQueryRepository.queryCustomerStoreId(mobile,storeId);
-      if (customer != null){
+//    long customerId = WxCustomerContext.getUser().getCustomerId();
+      long customerId = 3905997475673344L;
+      long storeId = 0;
+      try {
+          storeId = customerQueryRepository.queryCustomerStore(customerId);
+      } catch (Exception e) {
+          e.printStackTrace();
+          return new Payload(false);
+      }
+      if (storeId != 0){
         Map map = adminStoreQueryMapper.get(storeId);
         String name = (String) map.get("name");
           return new Payload(name);
       }
-      customerQueryRepository.updateCustomer(storeId,mobile);
-      return new Payload("绑定成功");
-    }
-    return new Payload("null");
-  }*/
+      return new Payload(false);
+  }
 
 //  @PostMapping("/test")
 //  public void test(@RequestParam String mobile ,@RequestParam Long storeId){ Customer customer = customerQueryRepository.queryCustomerStoreId(mobile,storeId);

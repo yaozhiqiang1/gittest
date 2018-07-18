@@ -12,5 +12,6 @@ import java.util.List;
  */
 @Mapper
 public interface OrderItemMapper {
-    List<Integer> queryQuantityList(@Param("productId") long productId);
+
+    Integer queryQuantity(@Param("productId") long productId,@Param("orderId") Long orderId);
 }

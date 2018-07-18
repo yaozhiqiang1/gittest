@@ -7,6 +7,7 @@ import com.fongwell.satchi.crm.core.common.error.DataNotFoundException;
 import com.fongwell.satchi.crm.core.common.error.DuplicateParameterException;
 import com.fongwell.satchi.crm.core.order.domain.entity.OrderItem;
 import com.fongwell.satchi.crm.core.order.query.mapper.OrderItemMapper;
+import com.fongwell.satchi.crm.core.order.query.mapper.OrderQueryMapper;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.Product;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSettings;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.Sku;
@@ -19,6 +20,7 @@ import com.fongwell.satchi.crm.core.product.service.event.ProductEnableEvent;
 import com.fongwell.satchi.crm.core.product.value.ProductRestrictionType;
 import com.fongwell.satchi.crm.core.product.value.ProductType;
 import com.fongwell.satchi.crm.core.support.ddd.AggregateFactory;
+import net.sf.ehcache.store.AuthoritativeTier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -48,6 +50,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private OrderItemMapper orderItemMapper;
+
+    @Autowired
+    private OrderQueryMapper orderQueryMapper;
 
   /*  @Override
     public Long onCreate(ProductData data) {
@@ -192,11 +197,10 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 限制礼品的购买
-     * todo orderItem里面没有限制的订单号
      * @param orderItem
      */
     @Override
-    public Payload restrictionamountGift(OrderItem orderItem) {
+    public Payload restrictionamountGift(OrderItem orderItem, long customerId) {
         long productId = orderItem.getProductId();
         ProductSettings productSettings = productQueryMapper.queryByIdProductSettings(productId);
         ProductType type = productSettings.getType();
@@ -207,15 +211,19 @@ public class ProductServiceImpl implements ProductService {
                 return new Payload(quantity <= restrictionAmount);
             }
             if (productSettings.getRestrictionType().equals(ProductRestrictionType.VIP)){
-                List<Integer> list =orderItemMapper.queryQuantityList(orderItem.getProductId());
+
+                List<Long> longs = orderQueryMapper.queryOrderIdList(customerId);
                 Integer total = 0;
-                for (Integer integer : list) {
-                    total = total + integer;
+                for (Long orderId : longs) {
+                    Integer quantity = orderItemMapper.queryQuantity(orderItem.getProductId(), orderId);
+                    if (quantity != null && quantity != 0) {
+                        total = total + quantity;
+                    }
                 }
                 return new Payload(productSettings.getRestrictionAmount() >= total + orderItem.getQuantity());
             }
         }
-        return null;
+        return new Payload(false);
     }
 
 }

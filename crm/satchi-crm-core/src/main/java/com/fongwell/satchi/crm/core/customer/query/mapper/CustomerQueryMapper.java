@@ -18,11 +18,13 @@ public interface CustomerQueryMapper {
 
     CustomerDetails queryCustomerDetails(@Param("id") long id);
 
-    Customer queryCustomerStoreId(@Param("mobile")String mobile, @Param("storeId")Long storeId);
+    Customer queryCustomerStoreId(@Param("customerId")long customerId, @Param("storeId")Long storeId);
 
-    void updateCustomer(@Param("mobile")String mobile,@Param("storeId")Long storeId);
+    void updateCustomer(@Param("customerId")long customerId,@Param("storeId")Long storeId);
 
     Long queryByMobile(@Param("mobile")String mobile);
 
     Date queryCheckindate(@Param("customerId") long customerId);
+
+    long queryCustomerStore(@Param("customerId") long customerId);
 }

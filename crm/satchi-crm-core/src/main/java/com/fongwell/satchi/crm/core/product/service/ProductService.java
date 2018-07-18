@@ -36,5 +36,5 @@ public interface ProductService {
      * 限制礼品的购买
      * @param orderItem
      */
-    Payload restrictionamountGift(OrderItem orderItem);
+    Payload restrictionamountGift(OrderItem orderItem,long customerId);
 }

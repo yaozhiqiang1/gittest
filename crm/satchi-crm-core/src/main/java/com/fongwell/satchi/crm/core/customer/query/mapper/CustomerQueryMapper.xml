@@ -33,11 +33,11 @@
     </resultMap>
 
     <select id="queryCustomerStoreId" resultMap="customer">
-        select c.id,c.mobile,c.storeid from fw_customer c where c.mobile = #{mobile} and c.storeid = #{storeId}
+        select c.id,c.mobile,c.storeid from fw_customer c where c.id = #{customerId} and c.storeid = #{storeId}
     </select>
 
     <update id="updateCustomer">
-        update fw_customer set storeid = #{storeId} where mobile = #{mobile}
+        update fw_customer set storeid = #{storeId} where id = #{customerId}
     </update>
 
     <select id="queryByMobile" resultType="long">
@@ -48,4 +48,7 @@
         select checkindate from crm_customer_credit where customerid = #{customerId};
     </select>
 
+    <select id="queryCustomerStore" resultType="long">
+        select storeid from fw_customer where id = #{customerId}
+    </select>
 </mapper>

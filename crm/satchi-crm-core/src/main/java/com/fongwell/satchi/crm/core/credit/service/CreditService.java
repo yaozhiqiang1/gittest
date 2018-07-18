@@ -2,6 +2,7 @@ package com.fongwell.satchi.crm.core.credit.service;
 
 import com.fongwell.satchi.crm.core.credit.domain.aggregate.CustomerCredit;
 import com.fongwell.satchi.crm.core.credit.domain.aggregate.CustomerCreditRecord;
+import com.fongwell.satchi.crm.core.product.dto.GifiCreditOrderDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -60,4 +61,11 @@ public interface CreditService {
      * @return
      */
     boolean queryCheckindate(long customerId);
+
+    /**
+     * 客户购买礼品时消费的积分
+     * @param gifiCreditOrderDto
+     * @return
+     */
+    Boolean purchaseGiftCredit(GifiCreditOrderDto gifiCreditOrderDto, long customerId);
 }

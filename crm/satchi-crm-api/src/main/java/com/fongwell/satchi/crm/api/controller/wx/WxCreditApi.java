@@ -118,10 +118,10 @@ public class WxCreditApi {
      * @return
      */
     @GetMapping("/checkinDate")
-    public boolean checkinDate(){
+    public Payload checkinDate(){
         CustomerAuthenticationDetails user = WxCustomerContext.getUser();
         long customerId = user.getCustomerId();
-        return creditService.queryCheckindate(customerId);
+        return new Payload(creditService.queryCheckindate(customerId));
     }
 
     /**
@@ -160,7 +160,9 @@ public class WxCreditApi {
      */
     @PostMapping("/restrictionamountGift")
     public com.fongwell.base.rest.Payload restrictionamountGift(@RequestBody OrderItem orderItem){
-        return productService.restrictionamountGift(orderItem);
+        long customerId = WxCustomerContext.getUser().getCustomerId();
+        return productService.restrictionamountGift(orderItem,customerId);
     }
+
 
 }

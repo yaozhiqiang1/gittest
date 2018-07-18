@@ -29,13 +29,20 @@ public class CustomerQueryRepositoryImpl implements CustomerQueryRepository {
     }
 
     @Override
-    public Customer queryCustomerStoreId(String mobile, Long storeId) {
-        return customerQueryMapper.queryCustomerStoreId(mobile,storeId);
+    public Customer queryCustomerStoreId(long customerId, Long storeId) {
+        return customerQueryMapper.queryCustomerStoreId(customerId,storeId);
+    }
+
+
+    @Override
+    public void updateCustomer(long customerId,Long storeId) {
+        customerQueryMapper.updateCustomer(customerId,storeId);
     }
 
     @Override
-    public void updateCustomer(Long storeId, String mobile) {
-        customerQueryMapper.updateCustomer(mobile,storeId);
+    public long queryCustomerStore(long customerId) {
+       return customerQueryMapper.queryCustomerStore(customerId);
+
     }
 
 }
