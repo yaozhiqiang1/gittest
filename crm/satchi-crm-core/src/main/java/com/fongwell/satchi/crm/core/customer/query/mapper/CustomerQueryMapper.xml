@@ -12,7 +12,6 @@
     </resultMap>
 
     <select id="queryCustomerDetailsByMobile" resultMap="customerDetails">
-
         select c.id,c.name,c.passwordhash as password,c.deleted,
          c.mobile from fw_customer c
         where c.mobile = #{mobile}

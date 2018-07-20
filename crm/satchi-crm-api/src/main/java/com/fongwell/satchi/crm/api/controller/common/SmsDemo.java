@@ -20,14 +20,6 @@ public class SmsDemo {
 
     public static void main(String[] args) throws Throwable {
 
-
-        String s = "sd";
-        String s1 = "";
-
-        System.out.println(StringUtil.isBlank(s));
-        System.out.println(StringUtil.isBlank(s1));
-
-
      /*   // 设置超时时间-可自行调整
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");

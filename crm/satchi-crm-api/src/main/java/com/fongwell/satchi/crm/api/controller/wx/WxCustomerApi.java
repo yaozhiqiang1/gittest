@@ -46,6 +46,7 @@ public class WxCustomerApi {
 
       @Autowired
       private AdminStoreQueryMapper adminStoreQueryMapper;
+
     @Resource(name = "wxUserBindingService")
     private WxUserBindingService wxUserBindingService;
 
@@ -138,7 +139,6 @@ public class WxCustomerApi {
      * 注册并绑定用户
      *
      * @param request 注册信息
-     * @param result  结果集
      */
 /*  @PostMapping("/register")
   @ResponseStatus(HttpStatus.OK)
@@ -196,21 +196,20 @@ public class WxCustomerApi {
      */
     @GetMapping("/againBindingStore")
     public void againBindingStore(@RequestParam Long storeId){
-//        long customerId = WxCustomerContext.getUser().getCustomerId();
-        long customerId = 3905997475673344L;
+        long customerId = WxCustomerContext.getUser().getCustomerId();
+//        long customerId = 3905997475673344L;
          customerQueryRepository.updateCustomer(customerId,storeId);
     }
 
     /**
      * 扫码绑定萌门店
-     * @param storeId
      * @return
      */
   @GetMapping("/bindingStore")
   public Payload bindingStore(){
       //检查用户登录信息是不是用户会员id还是微信id
-//    long customerId = WxCustomerContext.getUser().getCustomerId();
-      long customerId = 3905997475673344L;
+      long customerId = WxCustomerContext.getUser().getCustomerId();
+//      long customerId = 3905997475673344L;
       long storeId = 0;
       try {
           storeId = customerQueryRepository.queryCustomerStore(customerId);

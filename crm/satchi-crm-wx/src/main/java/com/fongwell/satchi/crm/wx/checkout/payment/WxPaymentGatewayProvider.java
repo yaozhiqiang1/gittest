@@ -67,7 +67,7 @@ public class WxPaymentGatewayProvider implements PaymentGatewayProvider {
 
             Assert.notNull(wxPayRequest, "wxpay data");
             System.out.println("-------------------------------OpenId ====" + wxPayRequest.getOpenId());
-            Assert.notNull(wxPayRequest.getOpenId(), "openId");
+          //  Assert.notNull(wxPayRequest.getOpenId(), "openId");
 
 
             if (wxPayRequest.getCreateIp() == null) {
