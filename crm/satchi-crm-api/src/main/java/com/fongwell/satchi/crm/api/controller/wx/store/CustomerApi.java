@@ -74,6 +74,7 @@ public class CustomerApi {
         return new Payload(customerMap.values());
     }
 
+    //会员资料
     @GetMapping("/detail")
     public Payload detail(@RequestParam long id) {
 
@@ -97,12 +98,14 @@ public class CustomerApi {
         return new Payload(customer);
     }
 
+    //会员标签
     @PostMapping("/tags")
     @ResponseStatus(HttpStatus.OK)
     public void saveTags(@RequestBody SaveTagsRequest request) {
         customerTagService.saveTags(request.getCustomerId(), request.getTags());
     }
-
+    
+    //购买记录
     @GetMapping("/orderHistory")
     public Payload orderHistory(
             @RequestParam long id,
@@ -110,14 +113,16 @@ public class CustomerApi {
             @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
         return new Payload(orderStatsQueryMapper.queryOrderItemHistory(id, from, size));
     }
-
+    
+    //设置为重要
     @PostMapping("/markImportant")
     @ResponseStatus(HttpStatus.OK)
     public void markImportant(@RequestParam long customerId) {
         customerService.markImportant(customerId, WxStoreContext.getStaff().getStoreId());
 
     }
-
+    
+    //取消为重要
     @PostMapping("/unmarkImportant")
     @ResponseStatus(HttpStatus.OK)
     public void unmarkImportant(@RequestParam long customerId) {

@@ -31,6 +31,8 @@ public class Shipping extends AbstractAggregateRoot {
 
     private String trackingNumber;
 
+    private String trackingName;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "state", length = 10)
     private ShippingState state;
@@ -50,16 +52,13 @@ public class Shipping extends AbstractAggregateRoot {
     public void setState(final ShippingState state) {
         this.state = state;
     }
-
+    
     public void setTrackingNumber(final String trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
 
-    public AddressValue getAddress() {
-        return address;
+    public void setTrackingName(final String trackingName) {
+        this.trackingName = trackingName;
     }
-
-    public void setAddress(AddressValue address) {
-        this.address = address;
-    }
+    
 }

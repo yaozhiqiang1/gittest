@@ -26,6 +26,7 @@ public class StaffApi {
     @Autowired
     private AdminStaffQueryMapper adminStaffQueryMapper;
 
+    //店员列表
     @GetMapping("")
     public Payload staffs(
             @RequestParam long storeId,
@@ -35,6 +36,7 @@ public class StaffApi {
         return new Payload(adminStaffQueryMapper.queryStaffs(storeId, from, size));
     }
 
+    //店员总数
     @GetMapping("/count")
     public Payload count(
             @RequestParam long storeId,
@@ -44,13 +46,14 @@ public class StaffApi {
         return new Payload(adminStaffQueryMapper.countStaffs(storeId));
     }
 
-
+    //新建店员
     @PostMapping("/create")
     @Validate
     public Payload create(@Valid @RequestBody StaffData data, BindingResult result) {
         return new Payload(staffService.createStaff(data.getStoreId(), data).getId());
     }
 
+    //更新店员
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
     @Validate
@@ -58,6 +61,7 @@ public class StaffApi {
         staffService.updateStaff(data.getId(), data);
     }
 
+    //删除店员
     @PostMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestParam long id) {

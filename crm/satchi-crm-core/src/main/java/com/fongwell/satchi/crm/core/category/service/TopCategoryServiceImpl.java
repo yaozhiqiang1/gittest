@@ -55,7 +55,7 @@ public class TopCategoryServiceImpl extends AbstractWriteService<TopCategory, Lo
     }
 
     @Override
-    public synchronized void onEnable(final Collection<Long> ids) {
+    public synchronized String onEnable(final Collection<Long> ids) {
         List<TopCategory> all = repository.findByState(State.enable);
         Set exists = new HashSet(all.size(), 2f);
         for (TopCategory next : all) {
@@ -63,7 +63,8 @@ public class TopCategoryServiceImpl extends AbstractWriteService<TopCategory, Lo
         }
         exists.addAll(ids);
         if (exists.size() > limit) {
-            throw new CategoryActiveException("actives category More than the limit :" + limit);
+        	return "201";
+ //           throw new CategoryActiveException("actives category More than the limit :" + limit);
         }
 
         List<TopCategory> enables = repository.findAll(new Specification<TopCategory>() {
@@ -79,6 +80,7 @@ public class TopCategoryServiceImpl extends AbstractWriteService<TopCategory, Lo
             next.onEnable();
             repository.save(next);
         }
+        return "200";
     }
 
     @Override

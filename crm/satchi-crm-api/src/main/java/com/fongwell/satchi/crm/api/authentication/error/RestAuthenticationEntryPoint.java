@@ -22,5 +22,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.getWriter().write("{\"code\":-1000}");
         response.flushBuffer();
 
+
     }
 }

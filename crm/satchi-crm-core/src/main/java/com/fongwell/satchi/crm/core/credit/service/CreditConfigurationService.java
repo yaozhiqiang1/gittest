@@ -9,9 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface CreditConfigurationService {
 
-    /**
-     * 保存积分设置
-     * @param data 积分配置实体类
-     */
     void saveConfiguration(CreditConfigurationDto data);
 }

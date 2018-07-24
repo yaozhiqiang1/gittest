@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CheckinConfigurationFactory implements CreditSourceConfigurationFactory {
 
+
     @Override
     public CreditSourceConfiguration create(long parentId, final CreditSourceConfigurationDto data) {
 

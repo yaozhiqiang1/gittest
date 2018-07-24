@@ -1,9 +1,11 @@
 package com.fongwell.satchi.crm.core.product.domain.aggregate.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * Created by roman on 18-4-3.
@@ -11,13 +13,15 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "crm_sku_inventory")
 public class Inventory {
-
+	
+	@Column(name = "inventory")
     private Integer inventory;
-
+	
+	@Column(name = "version")
     private Long version;
-
+	
     private Date createdDate;
-
+	
     private Date lastmodifiedDate;
 
     @Id
@@ -29,6 +33,8 @@ public class Inventory {
     }
 
     public Inventory(Long skuId, Integer in) {
+    	
+    	System.out.println("-=----------------------------------skuId:"+skuId);
         createdDate = new Date();
         sku = skuId;
         inventory = in;
@@ -60,31 +66,33 @@ public class Inventory {
         return sku;
     }
 
-    public Long getVersion() {
-        return version;
-    }
+	public Long getVersion() {
+		return version;
+	}
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
+	public Date getCreatedDate() {
+		return createdDate;
+	}
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
 
-    public Date getLastmodifiedDate() {
-        return lastmodifiedDate;
-    }
+	public Date getLastmodifiedDate() {
+		return lastmodifiedDate;
+	}
 
-    public void setLastmodifiedDate(Date lastmodifiedDate) {
-        this.lastmodifiedDate = lastmodifiedDate;
-    }
+	public void setLastmodifiedDate(Date lastmodifiedDate) {
+		this.lastmodifiedDate = lastmodifiedDate;
+	}
 
-    public void setSku(Long sku) {
-        this.sku = sku;
-    }
+	public void setSku(Long sku) {
+		this.sku = sku;
+	}
+    
+    
 }

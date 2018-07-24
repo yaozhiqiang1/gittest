@@ -11,7 +11,8 @@
         <result property="createdDate" column="createdDate"/>
         <result property="paymentGatewayType" column="paymentGatewayType"/>
         <result property="trackingNumber" column="trackingNumber"/>
-        <result property="gatewaytype" column="gatewaytype"/>
+        <result property="trackingName" column="trackingName"/>
+
     </resultMap>
 
     <sql id="ordersListWhere">
@@ -29,14 +30,11 @@
         </where>
     </sql>
     <select id="queryOrders" resultMap="orderListItem">
-
         select o.id, o.price,o.salePrice,o.state,
         o.createdDate,paymentGatewayType,
-        ship.trackingNumber,
-        payment.gatewaytype
+        ship.trackingNumber,ship.trackingName
         from crm_order o
         left join crm_shipping ship on ship.order_id = o.id
-        left join crm_order_payment payment on payment.order_id = o.id
         <include refid="ordersListWhere"/>
         order by o.createdDate desc
         offset #{from}
@@ -60,7 +58,6 @@
         <result property="paymentGatewayType" column="paymentGatewayType"/>
 
         <association property="payment" javaType="hashmap">
-
             <result column="payment_transactionId" property="transactionId"/>
             <result column="payment_amount" property="amount"/>
             <result column="payment_paymentDate" property="paymentDate"/>

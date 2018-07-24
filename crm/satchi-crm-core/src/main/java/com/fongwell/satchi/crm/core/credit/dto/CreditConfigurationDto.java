@@ -10,15 +10,15 @@ import java.util.Date;
  */
 public class CreditConfigurationDto implements Serializable {
 
-    private Boolean enabled; //是否激活启用
+    private Boolean enabled;
 
-    private Date expiration; //到期时间
-
-    @Valid
-    private Collection<CreditSourceConfigurationDto> sources; //积分来源配置
+    private Date expiration;
 
     @Valid
-    private CreditConsumeConfigurationDto consumeConfiguration;//积分消费配置
+    private Collection<CreditSourceConfigurationDto> sources;
+
+    @Valid
+    private CreditConsumeConfigurationDto consumeConfiguration;
 
 
     public Boolean getEnabled() {

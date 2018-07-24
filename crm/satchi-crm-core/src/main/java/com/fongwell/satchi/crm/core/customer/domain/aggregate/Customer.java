@@ -81,18 +81,12 @@ public class Customer extends AbstractAggregateRoot {
     @Column(name = "role_id")
     private Collection<Long> roleIds;
 
-  /*  public Customer(final String number, final String name, final String mobile, final String passwordHash) {
+    public Customer(final String number, final String name, final String mobile, final String passwordHash) {
         this.number = number;
         this.name = name;
         this.mobile = mobile;
         this.passwordHash = passwordHash;
     }
-*/
-  public Customer(final String number, final String name, final String mobile) {
-      this.number = number;
-      this.name = name;
-      this.mobile = mobile;
-  }
 
 
     public Customer(String number, CustomerData data) {
@@ -126,21 +120,5 @@ public class Customer extends AbstractAggregateRoot {
 
     public void setSex(final Sex sex) {
         this.sex = sex;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
     }
 }

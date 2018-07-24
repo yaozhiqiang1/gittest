@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/wx/category")
-public class  WxCategoryApi {
+public class WxCategoryApi {
 
     @Autowired
     private AdminCategoryQueryMapper categoryQueryMapper;

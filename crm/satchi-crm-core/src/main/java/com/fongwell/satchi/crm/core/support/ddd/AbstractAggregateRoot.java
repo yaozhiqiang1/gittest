@@ -3,7 +3,10 @@ package com.fongwell.satchi.crm.core.support.ddd;
 
 import com.fongwell.satchi.crm.core.support.id.Snowflake;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 import java.util.Date;
 
 /**

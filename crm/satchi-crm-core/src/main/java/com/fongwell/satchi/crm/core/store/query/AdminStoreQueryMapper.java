@@ -1,6 +1,5 @@
 package com.fongwell.satchi.crm.core.store.query;
 
-import com.fongwell.satchi.crm.core.store.domain.aggregate.Store;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

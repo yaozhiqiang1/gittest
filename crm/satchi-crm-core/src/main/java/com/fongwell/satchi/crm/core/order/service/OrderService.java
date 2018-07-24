@@ -14,4 +14,7 @@ public interface OrderService {
     void cancelOrder(long orderId);
 
     void completeOrder(long orderId);
+
+	void unship(long orderId);
+	
 }

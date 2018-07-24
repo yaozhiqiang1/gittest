@@ -17,7 +17,7 @@ public interface TopCategoryService extends WriteService<TopCategory,Long,TopCat
 
     void onUpdate(Long id,TopCategoryData data);
 
-    void onEnable(Collection<Long> ids);
+    String onEnable(Collection<Long> ids);
 
     void onDisable(Collection<Long> ids);
 

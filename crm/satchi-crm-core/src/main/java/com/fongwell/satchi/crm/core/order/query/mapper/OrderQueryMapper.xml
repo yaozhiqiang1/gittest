@@ -118,8 +118,4 @@
         limit #{size}
     </select>
 
-    <select id="queryOrderIdList" resultType="long">
-        select id from crm_order where customer_id = #{customerId} and state = 'to_ship' or state = 'shipped' or state = 'completed'
-    </select>
-
 </mapper>

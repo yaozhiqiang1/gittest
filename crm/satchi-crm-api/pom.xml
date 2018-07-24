@@ -77,38 +77,6 @@
             <version>1.0.0</version>
         </dependency>
 
-        <!--阿里短信云服务-->
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>3.2.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-
-        <!--任务调度,qurtz-->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-
-        <!-- spring-context-support 这个坐标必须导入 -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-context-support</artifactId>-->
-            <!--<version>4.2.0.RELEASE</version>-->
-        <!--</dependency>-->
-
-
     </dependencies>
 
 

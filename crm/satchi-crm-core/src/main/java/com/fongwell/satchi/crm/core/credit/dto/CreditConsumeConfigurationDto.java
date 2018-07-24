@@ -14,15 +14,16 @@ import java.math.BigDecimal;
 public class CreditConsumeConfigurationDto implements Serializable {
 
     @NotNull(message = "consume.credit.required")
-    private Integer credit;//积分
+    private Integer credit;
 
     @NotNull(message = "consume.cash.required")
-    private BigDecimal cash; //消费现金
+    private BigDecimal cash;
 
-    private Boolean enabled; //是否开启
+    private Boolean enabled;
 
-    private Integer maxCreditPerOrder; //每笔消费最多可使用多少积分
-    private Integer maxDiscountPercentage; //每笔消费最多抵扣总金额
+    private Integer maxCreditPerOrder;
+
+    private Integer maxDiscountPercentage;
 
     @NotNull(message = "consume.consumeOption.required")
     private ConsumeOption option;

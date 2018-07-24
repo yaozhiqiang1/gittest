@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Created by roman on 18-4-4.
@@ -38,8 +37,7 @@ public class ProductApi {
                            @RequestParam(required = false,defaultValue = "0") int from,
                            @RequestParam(required = false,defaultValue = "20") int size){
         RequestData request = new RequestData(query,categoryId == null?null:Collections.singleton(categoryId),numbers, StringUtils.isEmpty(state)?null: Collections.singleton(state),from,size);
-        Collection<Map> all = adminProductQueryMapper.findAll(request);
-        return new Payload(all);
+        return new Payload(adminProductQueryMapper.findAll(request));
     }
 
     @GetMapping("/count")
@@ -55,7 +53,7 @@ public class ProductApi {
     @Validate
     @ResponseStatus(HttpStatus.OK)
     public void create(@Valid @RequestBody ProductData data, BindingResult result){
-        productService.onCreate(data);
+    	productService.onCreate(data);
     }
 
     @PostMapping("/{id}")
@@ -76,7 +74,6 @@ public class ProductApi {
     public void enable(@RequestParam Collection<Long> ids){
         productService.onEnable(ids);
     }
-
     @DeleteMapping("")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestParam Collection<Long> ids){
@@ -87,7 +84,6 @@ public class ProductApi {
     public Payload get(@PathVariable Long id){
         return new Payload(adminProductQueryMapper.get(id));
     }
-
     @PostMapping("/sort/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void sort(@PathVariable Long id,@RequestParam(required = false,defaultValue = "0") Integer orderNumber){

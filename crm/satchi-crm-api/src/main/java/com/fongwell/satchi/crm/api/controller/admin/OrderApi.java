@@ -1,8 +1,6 @@
 package com.fongwell.satchi.crm.api.controller.admin;
 
 import com.fongwell.satchi.crm.api.Payload;
-import com.fongwell.satchi.crm.core.customer.domain.value.AddressValue;
-import com.fongwell.satchi.crm.core.order.domain.aggregate.Shipping;
 import com.fongwell.satchi.crm.core.order.domain.dto.ShippingRequest;
 import com.fongwell.satchi.crm.core.order.domain.value.OrderState;
 import com.fongwell.satchi.crm.core.order.query.mapper.AdminOrderQueryMapper;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by docker on 5/7/18.
@@ -39,20 +36,30 @@ public class OrderApi {
 
         Date startDate = start == null ? null : new Date(start);
         Date endDate = end == null ? null : new Date(end);
-
         return new Payload(adminOrderQueryMapper.queryOrders(states, startDate, endDate, from, size));
 
     }
 
     @PostMapping("/ship/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void ship(@PathVariable long id, @RequestParam String trackingNumber) {
-        ShippingRequest request = new ShippingRequest();
+    public void ship(@PathVariable long id, @RequestParam(required = false, value = "trackingNumber") String trackingNumber,
+    		@RequestParam(required = false, value = "trackingName") String trackingName) {
+    	ShippingRequest request = new ShippingRequest();
         request.setTrackingNumber(trackingNumber);
+        request.setTrackingName(trackingName);
         orderService.shipOrder(id, request);
 
     }
+ 
 
+	@PostMapping("/unship/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void unship(@PathVariable long id) {
+	    orderService.unship(id);
+	
+	}
+    
+    
     @PostMapping("/complete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void complete(@PathVariable long id) {
@@ -64,9 +71,7 @@ public class OrderApi {
 
     @GetMapping("/{id}")
     public Payload get(@PathVariable long id) {
-
-        final Map order = adminOrderQueryMapper.findOrder(id);
-        return new Payload(order);
+        return new Payload(adminOrderQueryMapper.findOrder(id));
     }
 
     @GetMapping("/count")
@@ -81,6 +86,4 @@ public class OrderApi {
         return new Payload(adminOrderQueryMapper.countOrders(states, startDate, endDate));
 
     }
-
-
 }

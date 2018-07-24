@@ -36,13 +36,12 @@
     <resultMap id="settings" type="hashmap">
         <result column="type" property="type"/>
         <result column="price" property="price"/>
-        <result column="retrictiontype" property="retrictiontype"/>
-        <result column="retrictionamount" property="retrictionamount"/>
+        <result column="retrictionType" property="retrictionType"/>
+        <result column="retrictionAmount" property="retrictionAmount"/>
         <result column="credit" property="credit"/>
-        <result column="originalprice" property="originalprice"/>
-        <result column="startdate" property="startdate"/>
-        <result column="enddate" property="enddate"/>
-        <result column="product_id" property="productId"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
     </resultMap>
 
     <select id="findAll" resultMap="product">
@@ -185,15 +184,4 @@
         from crm_product_settings setting
         where product_id = #{id}
     </select>
-
-    <select id="queryProductSettings" resultMap="settings">
-        select cps.id,cps.enddate,cps.startdate,cps.type,cps.product_id from crm_product_settings cps where  cps.type = 'GIFT';
-    </select>
-
-    <select id="queryByIdProductSettings" resultType="com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSettings">
-        select cps.type,cps.price,cps.restrictiontype,cps.restrictionamount,cps.credit from crm_product_settings cps where product_id = #{productId}
-    </select>
-
-
-
 </mapper>

@@ -20,25 +20,28 @@ public class TagApi {
     @Autowired
     private TagMapper tagMapper;
 
-
+    //标签列表
     @GetMapping("")
     public Payload list(@RequestParam(required = false, value = "query") String query,
                         @RequestParam(required = false, defaultValue = "0") int from, @RequestParam(required = false, defaultValue = "20") int size) {
         return new Payload(tagMapper.queryTags(query, from, size));
     }
 
+    //标签总数
     @GetMapping("/count")
     public Payload count(@RequestParam(required = false, value = "query") String query
     ) {
         return new Payload(tagMapper.countTags(query));
     }
 
+    //新建标签
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public void create(@RequestParam String tag) {
         tagService.createTag(tag);
     }
 
+    //删除标签
     @PostMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@RequestParam String tag) {

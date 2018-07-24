@@ -1,18 +1,30 @@
 package com.fongwell.satchi.crm.core.product.domain.aggregate;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
+import javax.persistence.Table;
+
 import com.fongwell.satchi.crm.core.common.State;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.Attach;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSettings;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSourceUrl;
 import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.Sku;
 import com.fongwell.satchi.crm.core.support.ddd.AbstractAggregateRoot;
-
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by roman on 18-4-3.

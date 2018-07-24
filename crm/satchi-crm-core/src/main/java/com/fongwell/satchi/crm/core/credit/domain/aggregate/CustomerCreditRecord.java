@@ -18,18 +18,15 @@ public class CustomerCreditRecord {
     private long id;
 
     @Column(name = "source", length = 30)
-    private String source; //来源
+    private String source;
     @Column(name = "createdDate", columnDefinition = "date")
-    private Date createdDate; //创建时间
+    private Date createdDate;
 
     @Column(name = "customer_id")
     private long customerId;
 
-    @Column(name = "customerid")
-    private Long customerid;
-
-    @Column(name = "orderid")
-    private Long orderid;
+    @Column(name = "orderId")
+    private Long orderId;
 
     private BigDecimal price;
 
@@ -40,9 +37,9 @@ public class CustomerCreditRecord {
     @Enumerated(EnumType.STRING)
     private CreditType type;
 
-    public CustomerCreditRecord(final long customerId, final Long orderid, final BigDecimal price, final int credits, final CreditType type, final String source) {
+    public CustomerCreditRecord(final long customerId, final Long orderId, final BigDecimal price, final int credits, final CreditType type, final String source) {
         this.customerId = customerId;
-        this.orderid = orderid;
+        this.orderId = orderId;
         this.price = price;
         this.credits = credits;
         this.type = type;
@@ -74,8 +71,8 @@ public class CustomerCreditRecord {
         return customerId;
     }
 
-    public Long getOrderid() {
-        return orderid;
+    public Long getOrderId() {
+        return orderId;
     }
 
     public BigDecimal getPrice() {
@@ -87,43 +84,5 @@ public class CustomerCreditRecord {
         return type;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
-    }
-
-    public Long getCustomerid() {
-        return customerid;
-    }
-
-    public void setCustomerid(Long customerid) {
-        this.customerid = customerid;
-    }
-
-    public void setOrderid(Long orderid) {
-        this.orderid = orderid;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
-    }
-
-    public void setType(CreditType type) {
-        this.type = type;
-    }
 }

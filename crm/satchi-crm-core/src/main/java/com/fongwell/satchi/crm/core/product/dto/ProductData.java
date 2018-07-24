@@ -1,20 +1,21 @@
 package com.fongwell.satchi.crm.core.product.dto;
 
-import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSettings;
-import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSourceUrl;
-import com.fongwell.satchi.crm.core.product.value.ProductType;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSourceUrl;
+import com.fongwell.satchi.crm.core.product.value.ProductType;
 
 /**
  * Created by roman on 18-4-3.
@@ -31,9 +32,11 @@ public class ProductData {
     private String composition;
     @Length(max = 500,message = "ProductData.delivery long length")
     private String delivery;
-    @NotNull(message = "ProductData.inventory require")
+    
+   // @NotNull(message = "ProductData.inventory require")
     @Min(value = 0,message = "ProductData.inventory smallest")
     private Integer inventory;
+    
     @DecimalMin(value = "0",message = "ProductData.postage smallest")
     private BigDecimal postage = BigDecimal.ZERO;
 

@@ -11,11 +11,11 @@ import java.io.Serializable;
 public class CreditSourceConfigurationDto implements Serializable {
 
     @Min(value = 0)
-    private Integer credit; //积分
+    private Integer credit;
 
     @NotEmpty(message = "type.required")
-    private String type; //积分类型
-    private Boolean enabled;//是否启用
+    private String type;
+    private Boolean enabled;
 
     public Integer getCredit() {
         return credit;

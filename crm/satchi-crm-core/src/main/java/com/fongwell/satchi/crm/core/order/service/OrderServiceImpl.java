@@ -1,17 +1,19 @@
 package com.fongwell.satchi.crm.core.order.service;
 
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import com.fongwell.infrastructure.event.publish.EventPublisher;
 import com.fongwell.satchi.crm.core.order.domain.aggregate.Order;
 import com.fongwell.satchi.crm.core.order.domain.aggregate.Shipping;
 import com.fongwell.satchi.crm.core.order.domain.dto.ShippingRequest;
+import com.fongwell.satchi.crm.core.order.domain.value.OrderState;
 import com.fongwell.satchi.crm.core.order.event.OrderCancelledEvent;
 import com.fongwell.satchi.crm.core.order.repository.OrderRepository;
 import com.fongwell.satchi.crm.core.order.repository.ShippingRepository;
 import com.fongwell.satchi.crm.core.order.utils.OrderUtils;
 import com.fongwell.support.utils.Assert;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * Created by docker on 5/9/18.
@@ -41,23 +43,19 @@ public class OrderServiceImpl implements OrderService {
             shipping = new Shipping(order.getCustomerId(), orderId, order.getShippingAddress());
         }
         shipping.setTrackingNumber(request.getTrackingNumber());
-
+        shipping.setTrackingName(request.getTrackingName());
         shippingRepository.save(shipping);
     }
 
     @Override
     public void cancelOrder(final long orderId) {
-
         Order order = orderRepository.findOne(orderId);
         if (order != null) {
             order.cancel();
             orderRepository.save(order);
-
-
             eventPublisher.publish(new OrderCancelledEvent(order.getId(), OrderUtils.toEventItems(order)));
 
         }
-
 
     }
 
@@ -70,6 +68,17 @@ public class OrderServiceImpl implements OrderService {
 
         }
 
-
     }
+
+	@Override
+	public void unship(long orderId) {
+	   Order order = orderRepository.findOne(orderId);
+       if (order != null) {
+            order.setState(OrderState.to_ship);
+            System.out.println("order.getState():"+order.getState());
+            orderRepository.save(order);
+            
+       }
+	}
+
 }

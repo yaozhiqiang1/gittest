@@ -5,16 +5,16 @@
 
     <select id="queryStats" resultType="com.fongwell.satchi.crm.core.order.query.dto.OrderStats">
 
-    select
-    round(count(1) / (COALESCE(extract(year from max(createdDate)) - extract(year from min(createdDate)),1)::int + 1),1) as frequency,
-    COALESCE(sum(price),0) as expenses,
-    count(1) as orders,
-    case when sum(amount) = 0 then 0 else COALESCE(round(sum(price) / sum(amount),2),0) end as expensePerItem,
-    case when count(1) = 0 then 0 else COALESCE(round(sum(price) / count(1),2),0) end as expensePerOrder,
-    case when sum(originalPrice) = 0 then 0 else round(sum(price) * 100 / sum(originalPrice) ,2) end as discount
-    from crm_order_history
-    where customer_id = #{customerId}
-</select>
+   select
+round(count(1) / (COALESCE(extract(year from max(createdDate)) - extract(year from min(createdDate)),1)::int + 1),1) as frequency,
+COALESCE(sum(price),0) as expenses,
+   count(1) as orders,
+   case when sum(amount) = 0 then 0 else COALESCE(round(sum(price) / sum(amount),2),0) end as expensePerItem,
+  case when count(1) = 0 then 0 else COALESCE(round(sum(price) / count(1),2),0) end as expensePerOrder,
+  case when sum(originalPrice) = 0 then 0 else round(sum(price) * 100 / sum(originalPrice) ,2) end as discount
+   from crm_order_history
+   where customer_id = #{customerId}
+    </select>
 
     <resultMap id="orderItemHistoryItem" type="java.util.HashMap">
         <result column="item_id" property="id"/>

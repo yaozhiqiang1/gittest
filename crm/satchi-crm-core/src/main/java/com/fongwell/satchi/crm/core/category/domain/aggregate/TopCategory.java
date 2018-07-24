@@ -68,4 +68,11 @@ public class TopCategory extends AbstractAggregateRoot {
     public int getOrderNumber() {
         return orderNumber;
     }
+
+	@Override
+	public String toString() {
+		return "TopCategory [name=" + name + ", imageUrl=" + imageUrl + ", categoryId=" + categoryId + ", state="
+				+ state + ", orderNumber=" + orderNumber + "]";
+	}
+    
 }

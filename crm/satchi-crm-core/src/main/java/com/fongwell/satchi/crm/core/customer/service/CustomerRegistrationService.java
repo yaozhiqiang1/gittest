@@ -9,6 +9,4 @@ import com.fongwell.satchi.crm.core.customer.dto.CustomerRegisterRequest;
 public interface CustomerRegistrationService {
 
     Customer register(CustomerRegisterRequest request);
-
-    Customer queryMobile(String mobile);
 }

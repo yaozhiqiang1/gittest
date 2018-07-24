@@ -1,11 +1,10 @@
 package com.fongwell.satchi.crm.core.product.repository;
 
-import com.fongwell.satchi.crm.core.product.domain.aggregate.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.fongwell.satchi.crm.core.product.domain.aggregate.Product;
 
 /**
  * Created by roman on 18-4-3.

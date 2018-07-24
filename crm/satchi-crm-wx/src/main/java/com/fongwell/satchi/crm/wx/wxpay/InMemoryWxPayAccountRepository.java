@@ -28,5 +28,5 @@ public class InMemoryWxPayAccountRepository implements WxPayAccountRepository {
         WeixinPayAccount account = accounts.get(identifier);
         Assert.notNull(account, "WeixinPayAccount for: " + identifier);
         return account;
-}
+    }
 }

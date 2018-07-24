@@ -40,12 +40,6 @@ left join crm_credit_consume_configuration ccc on ccc.id = cc.id
 where cc.id = #{id}
     </select>
 
-    <resultMap id="queryExpiration" type="java.util.HashMap">
-        <result property="expiration" column="expiration"/>
-    </resultMap>
-    <select id="queryCreditConfigurationExpiration" resultMap="queryExpiration">
-        select expiration from crm_credit_configuration where id = #{id}
-    </select>
 
 </mapper>
 

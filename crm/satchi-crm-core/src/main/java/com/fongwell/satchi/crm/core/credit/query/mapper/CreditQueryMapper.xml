@@ -27,26 +27,9 @@
        select credits from crm_customer_credit where id =#{customerId}
     </select>
 
-<!--    <resultMap id="creditRecordItem" type="hashmap">
-        <result property="id" column="id"/>
-        <result property="orderid" column="orderid"/>
-        <result property="source" column="source"/>
-        <result property="type" column="type"/>
-        <result property="price" column="price"/>
-        <result property="credits" column="credits"/>
-    </resultMap>
-
-    <select id="queryCreditRecords" resultMap="creditRecordItem">
-        select id, orderid,createdDate, source,type,price,credits
-        from crm_customer_credit_record
-        where customer_id = #{customerId}
-        order by createdDate desc offset #{from} limit #{size}
-    </select>-->
-
-    <!--yzq-->
     <resultMap id="creditRecordItem" type="hashmap">
         <result property="id" column="id"/>
-        <result property="orderid" column="orderid"/>
+        <result property="order_id" column="orderId"/>
         <result property="source" column="source"/>
         <result property="type" column="type"/>
         <result property="price" column="price"/>
@@ -54,18 +37,10 @@
     </resultMap>
 
     <select id="queryCreditRecords" resultMap="creditRecordItem">
-        select id, orderid,createdDate, source,type,price,credits
+        select id, order_id,createdDate, source,type,price,credits
         from crm_customer_credit_record
         where customer_id = #{customerId}
         order by createdDate desc offset #{from} limit #{size}
-    </select>
-
-    <select id="customerCreditTotal" resultType="int">
-        select credits from crm_customer_credit where customerid = #{customerId}
-    </select>
-
-    <select id="queryEnabled" resultType="boolean">
-        select enabled from crm_credit_configuration where id = -1
     </select>
 
 

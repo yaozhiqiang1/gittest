@@ -12,12 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PurchaseConfigurationFactory implements CreditSourceConfigurationFactory {
 
-    /**
-     *  参数封装到CreditSourceConfiguration 实体类
-     * @param parentId
-     * @param data  封装着 CreditSourceConfiguration 实体类的一些数据 credit,enabled,type
-     * @return  CreditSourceConfiguration
-     */
     @Override
     public CreditSourceConfiguration create(final long parentId, final CreditSourceConfigurationDto data) {
 

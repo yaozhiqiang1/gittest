@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +19,4 @@ public interface OrderQueryMapper {
                                 @Param("state") String state,
                                 @Param("from") int from,
                                 @Param("size") int size);
-
-    List<Long> queryOrderIdList(@Param("customerId") long customerId);
 }

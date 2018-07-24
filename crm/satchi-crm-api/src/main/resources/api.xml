@@ -68,32 +68,4 @@ http://www.springframework.org/schema/beans/spring-beans.xsd
 
     </bean>
 
-    <!-- Spring 整合 Quarzt -->
-    <!-- 创建 JobDetail 对象 -->
-    <bean id="jobDetail"
-          class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-        <!-- 关联我们的任务类 -->
-        <property name="jobClass" value="com.fongwell.satchi.crm.api.jobs.PromotionJob"/>
-    </bean>
-    <!-- 创建触发器 -->
-    <bean id="trigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <!-- 关联 JobDetail -->
-        <property name="jobDetail" ref="jobDetail"/>
-        <!-- cron 表达式 -->
-        <property name="cronExpression" value="0 0 1 * * ?"></property>
-    </bean>
-    <!-- 创建任务调度对象 -->
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-
-        <!--自己设置JobFactory -->
-        <property name="jobFactory" ref="myJobFactory"/>
-
-        <!-- 关联触发器 -->
-        <property name="triggers"><array>
-            <ref bean="trigger"/>
-        </array>
-        </property>
-    </bean>
-
 </beans>

@@ -2,10 +2,8 @@ package com.fongwell.satchi.crm.core.credit.domain.aggregate;
 
 import com.fongwell.satchi.crm.core.support.ddd.AbstractAggregateRoot;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * Created by docker on 5/8/18.
@@ -17,10 +15,6 @@ public class CustomerCredit extends AbstractAggregateRoot {
 
     private Integer credits;
 
-    private long customerId;
-
-    @Column(name = "checkinDate",nullable = true)
-    private Date checkinDate;
 
     public CustomerCredit(final long customerId, final Integer credits) {
         this.credits = credits;
@@ -44,25 +38,5 @@ public class CustomerCredit extends AbstractAggregateRoot {
 
         }
         return credits;
-    }
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setCredits(Integer credits) {
-        this.credits = credits;
-    }
-
-    public Date getCheckinDate() {
-        return checkinDate;
-    }
-
-    public void setCheckinDate(Date checkinDate) {
-        this.checkinDate = checkinDate;
     }
 }
