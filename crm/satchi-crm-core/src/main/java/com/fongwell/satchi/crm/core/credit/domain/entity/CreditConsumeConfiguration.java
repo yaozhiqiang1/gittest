@@ -86,4 +86,12 @@ public class CreditConsumeConfiguration {
     public void setMaxDiscountPercentage(final Integer maxDiscountPercentage) {
         this.maxDiscountPercentage = maxDiscountPercentage;
     }
+
+    public ConsumeOption getOption() {
+        return option;
+    }
+
+    public void setOption(ConsumeOption option) {
+        this.option = option;
+    }
 }

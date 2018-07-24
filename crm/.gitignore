@@ -15,3 +15,5 @@ classes
 .project
 .idea/
 .xls
+.classpath
+.project
