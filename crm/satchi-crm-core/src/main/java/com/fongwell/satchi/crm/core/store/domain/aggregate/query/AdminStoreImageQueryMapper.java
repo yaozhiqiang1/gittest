@@ -17,4 +17,11 @@ public interface AdminStoreImageQueryMapper {
     int countStoreImage();
 
     Map get(@Param("id") long id);
+
+    /**
+     * 根据用户id查询所有的商店详情图片
+     * @param storeid
+     * @return
+     */
+    Collection<Map> findByIdStoreImageList(@Param("storeid") Long storeid);
 }

@@ -17,4 +17,16 @@ public interface AdminStoreQueryMapper {
     int countStore();
 
     Map get(@Param("id")long id);
+
+    /**
+     * 根据地址查询所有的门店
+     * @return
+     */
+    Collection<Map> addressGetStoreList(@Param("storeAddress")String storeAddress);
+
+    /**
+     * 查询门店所有的省份
+     * @return
+     */
+    Collection<Map> findAllStoreList();
 }

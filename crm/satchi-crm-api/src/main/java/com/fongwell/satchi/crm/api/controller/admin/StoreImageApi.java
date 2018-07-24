@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by roman on 18-3-30.
@@ -59,5 +61,18 @@ public class StoreImageApi {
     @Validate
     public void create(@RequestBody@Valid StoreImageData data, BindingResult result){
         storeImageService.create(data);
+    }
+
+    /**
+     * 根据storeid 查询商店的详情图片
+     * @param storeid
+     * @return
+     */
+    @GetMapping("/findByIdStoreImageList")
+    public Payload findByIdStoreImageList(@RequestParam Long storeid){
+
+        Collection<Map> storeImageList = adminStoreImageQueryMapper.findByIdStoreImageList(storeid);
+
+        return new Payload(storeImageList);
     }
 }

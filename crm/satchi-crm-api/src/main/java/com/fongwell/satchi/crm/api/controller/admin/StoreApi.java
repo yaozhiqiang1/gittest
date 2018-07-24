@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by roman on 18-3-30.
@@ -69,4 +70,30 @@ public class StoreApi {
     public Payload get(@PathVariable Long id) {
         return new Payload(adminStoreQueryMapper.get(id));
     }
+
+    /**
+     * 根据地址获取商店信息
+     * @param storeAddress
+     * @return
+     */
+    @GetMapping("/addressGetStoreList")
+    public Payload locationStore(@RequestParam String storeAddress){
+
+        Collection<Map> maps = storeService.addressGetStoreList(storeAddress);
+
+        return new Payload(maps);
+    }
+
+    /**
+     * 查询所有的商店省份
+     * @return
+     */
+    @GetMapping("/findAllStoreList")
+    public Payload findAllStoreList(){
+
+        Collection<Map> storeList = storeService.findAllStoreList();
+
+        return new Payload(storeList);
+    }
+
 }

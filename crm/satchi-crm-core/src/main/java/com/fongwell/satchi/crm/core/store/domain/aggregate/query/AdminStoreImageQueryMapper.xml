@@ -29,4 +29,8 @@
         left join crm_store s on s.id = si.storeId and s.deleted = false
         where si.deleted = false and si.id = #{id}
     </select>
+
+    <select id="findByIdStoreImageList" resultMap="storeImage">
+        select csi.id,csi.imageurl from crm_store_image csi where storeid = #{storeid}
+    </select>
 </mapper>

@@ -33,4 +33,14 @@
         from crm_store
         where id = #{id}
     </select>
+
+    <select id="addressGetStoreList" resultMap="store">
+        select cs.id,cs.name,cs.city from crm_store cs where cs.province = #{storeAddress}
+    </select>
+
+    <select id="findAllStoreList" resultMap="store">
+        select cs.id,cs.province from crm_store cs
+    </select>
+
+
 </mapper>
