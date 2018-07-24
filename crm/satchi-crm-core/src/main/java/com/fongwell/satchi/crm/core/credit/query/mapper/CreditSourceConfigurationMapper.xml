@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.credit.query.mapper.CreditSourceConfigurationMapper">
+
+    <insert id="saveCreditSourceConfiguration" parameterType="com.fongwell.satchi.crm.core.credit.domain.entity.CreditSourceConfiguration">
+        INSERT INTO "public"."crm_credit_source_configuration" values(#{type},#{id},#{credit},#{enabled},#{parentId})
+    </insert>
+
+    <update id="updateCreditSourceConfiguration" parameterType="com.fongwell.satchi.crm.core.credit.domain.entity.CreditSourceConfiguration">
+        update crm_credit_source_configuration
+        <set>
+            <if test="credit != null and credit != ''">
+            credit = #{credit},
+            </if>
+            <if test="enabled != null and enabled != ''">
+            enabled = #{enabled}
+            </if>
+        </set>
+        <where>
+            type = #{type}
+        </where>
+    </update>
+
+    <select id="queryByType" resultType="com.fongwell.satchi.crm.core.credit.domain.entity.CreditSourceConfiguration">
+        select * from crm_credit_source_configuration ccsc where ccsc.type = #{type}
+    </select>
+
+</mapper>
+
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.product.query.BookmarkProductQueryMapper">
+
+
+    <select id="queryProductIds" resultType="java.lang.Long">
+
+
+ select product_id from crm_product_bookmark where customer_id = #{customerId}
+ order by createdDate desc
+
+        offset #{from}
+        limit #{size}
+    </select>
+
+
+    <select id="isBookmarked" resultType="boolean">
+        select case when count(1) = 0  then false else true end
+        from crm_product_bookmark where customer_id = #{customerId} and product_id = #{productId}
+    </select>
+
+    <select id="checkBookmarked" resultType="long">
+        select product_id
+        from crm_product_bookmark where customer_id = #{customerId}
+        and
+        product_id in
+        <foreach collection="productIds" item="productId" open="(" close=")" separator=",">
+            #{productId}
+        </foreach>
+    </select>
+
+</mapper>

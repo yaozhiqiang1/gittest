@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.store.query.AdminStaffQueryMapper">
+    <resultMap id="staff" type="hashmap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="number" property="number"/>
+        <result column="position" property="position"/>
+        <result column="note" property="note"/>
+    </resultMap>
+
+    <select id="queryStaffs" resultMap="staff">
+        select id, name,mobile,number,note,position
+        from crm_staff
+        where store_id = #{storeId} and deleted = false
+        order by id desc
+        <if test="from > 0">offset #{from}</if>
+        <if test="size > 0">limit #{size}</if>
+    </select>
+
+    <select id="countStaffs" resultType="integer">
+        select count(1)
+        from crm_staff
+        where deleted = false
+    </select>
+
+    <select id="getStaff" resultMap="staff">
+        select id, name,mobile,number,note,position
+        from crm_staff
+        where id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.tag.query.mapper.TagMapper">
+
+
+    <select id="searchTags" resultType="string">
+        select id from crm_tag
+        <where>
+            <if test="query != null and query != ''">
+                <bind name="queryText" value="query"/>
+                id like '${queryText}%'
+            </if>
+        </where>
+        order by id
+        <if test="from > 0">offset #{from}</if>
+        <if test="size > 0">limit #{size}</if>
+    </select>
+
+    <resultMap id="tagItem" type="java.util.HashMap">
+        <result column="id" property="id"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="referenceCount" property="referenceCount"/>
+    </resultMap>
+    <select id="queryTags" resultMap="tagItem">
+select id, createdDate, referenceCount from crm_tag order by createdDate desc  offset #{from} limit #{size}
+
+    </select>
+
+    <select id="countTags" resultType="int">
+        select count(1) from crm_tag
+    </select>
+
+</mapper>

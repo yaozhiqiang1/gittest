@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.order.query.mapper.OrderQueryMapper">
+
+
+    <resultMap id="orderDetail" type="com.fongwell.satchi.crm.core.order.query.dto.OrderDetail">
+        <id property="id" column="id"/>
+        <result property="price" column="price"/>
+        <result property="salePrice" column="salePrice"/>
+        <result property="state" column="state"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="totalPaid" column="totalPaid"/>
+        <association property="shippingAddress"
+                     javaType="com.fongwell.satchi.crm.core.customer.domain.value.AddressValue">
+            <result property="receiver" column="shipping_receiver"/>
+            <result property="contactNumber" column="shipping_contactNumber"/>
+            <result property="province" column="shipping_province"/>
+            <result property="city" column="shipping_city"/>
+            <result property="district" column="shipping_district"/>
+            <result property="address" column="shipping_address"/>
+            <result property="postcode" column="shipping_postcode"/>
+        </association>
+
+        <collection property="items" javaType="java.util.LinkedList"
+                    ofType="com.fongwell.satchi.crm.core.order.query.dto.OrderDetailItem">
+            <id column="item_id" property="id"/>
+            <result property="price" column="item_price"/>
+            <result property="salePrice" column="item_salePrice"/>
+            <result property="totalPrice" column="item_totalPrice"/>
+            <result property="totalSalePrice" column="item_totalSalePrice"/>
+            <result property="name" column="item_name"/>
+            <result property="productId" column="item_productId"/>
+            <result property="skuId" column="item_skuId"/>
+            <result property="pcImage" column="item_pcImage"/>
+            <result property="mobileImage" column="item_mobileImage"/>
+            <result property="imageUrl" column="item_mobileImage"/>
+            <result property="quantity" column="item_quantity"/>
+            <result property="skuNumber" column="item_skuNumber"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="queryOrderDetail" resultMap="orderDetail">
+        select o.id, o.price,o.salePrice,o.state,o.createdDate,
+        shipping_receiver,shipping_contactNumber,shipping_province,shipping_city,
+        shipping_district,shipping_address,shipping_postcode,o.totalPaid,
+        item.id as item_id,
+        item.name as item_name,
+        item.price as item_price,
+        item.totalPrice as item_totalPrice,
+        item.salePrice as item_salePrice,
+        item.totalSalePrice as item_totalSalePrice,
+        item.product_id as item_productId,
+        item.sku_id as item_skuId,
+        item.pcImage as item_pcImage,
+        item.mobileImage as item_mobileImage,
+        item.quantity as item_quantity,
+        item.skuNumber as item_skuNumber
+        from crm_order o
+        left join crm_order_item item on item.order_id = o.id
+        where o.id = #{id}
+
+    </select>
+
+
+    <resultMap id="orderListItem" type="map">
+        <id property="id" column="id"/>
+        <result property="price" column="price"/>
+        <result property="salePrice" column="salePrice"/>
+        <result property="state" column="state"/>
+        <result property="createdDate" column="createdDate"/>
+
+        <collection property="items" javaType="java.util.LinkedList"
+                    ofType="com.fongwell.satchi.crm.core.order.query.dto.OrderDetailItem">
+            <id column="item_id" property="id"/>
+            <result property="price" column="item_price"/>
+            <result property="salePrice" column="item_salePrice"/>
+            <result property="totalPrice" column="item_totalPrice"/>
+            <result property="totalSalePrice" column="item_totalSalePrice"/>
+            <result property="name" column="item_name"/>
+            <result property="productId" column="item_productId"/>
+            <result property="skuId" column="item_skuId"/>
+            <result property="pcImage" column="item_pcImage"/>
+            <result property="mobileImage" column="item_mobileImage"/>
+            <result property="imageUrl" column="item_mobileImage"/>
+            <result property="quantity" column="item_quantity"/>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="queryOrders" resultMap="orderListItem">
+
+        select o.id, o.price,o.salePrice,o.state,o.createdDate,
+        shipping_receiver,shipping_contactNumber,shipping_province,shipping_city,
+        shipping_district,shipping_address,shipping_postcode,
+        item.id as item_id,
+        item.name as item_name,
+        item.price as item_price,
+        item.totalPrice as item_totalPrice,
+        item.salePrice as item_salePrice,
+        item.totalSalePrice as item_totalSalePrice,
+        item.product_id as item_productId,
+        item.sku_id as item_skuId,
+        item.pcImage as item_pcImage,
+        item.mobileImage as item_mobileImage,
+        item.quantity as item_quantity,
+        item.skuNumber as item_skuNumber
+        from crm_order o
+        left join crm_order_item item on item.order_id = o.id
+        where o.customer_id = #{customerId}
+        <if test="state != null">
+            and o.state = #{state}
+        </if>
+
+        order by o.createdDate desc nulls last
+        offset #{from}
+        limit #{size}
+    </select>
+
+    <select id="queryOrderIdList" resultType="long">
+        select id from crm_order where customer_id = #{customerId} and state = 'to_ship' or state = 'shipped' or state = 'completed'
+    </select>
+
+</mapper>

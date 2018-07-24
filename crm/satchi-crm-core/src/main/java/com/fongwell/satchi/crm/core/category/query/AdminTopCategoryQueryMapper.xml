@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.category.query.AdminTopCategoryQueryMapper">
+    <resultMap id="category" type="hashmap">
+        <result property="id" column="id"/>
+        <result property="categoryId" column="categoryId"/>
+        <result property="name" column="name"/>
+        <result property="imageUrl" column="imageUrl"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="lastmodifiedDate" column="lastmodifiedDate"/>
+        <result property="orderNumber" column="orderNumber"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <sql id="findCategory">
+        select c.id,pc.name,c.imageUrl,c.createdDate,c.lastmodifiedDate,c.orderNumber,c.state,pc.id as categoryId
+        from crm_top_category c
+        left join crm_category pc on pc.id = c.categoryId
+    </sql>
+
+    <select id="findAll" resultMap="category">
+        <include refid="findCategory"/>
+        where c.deleted = false
+        <if test="request.states != null and request.states.size() > 0">
+            and c.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by orderNumber,lastmodifiedDate desc
+        <if test="request.from > 0">offset #{request.from}</if>
+        <if test="request.size > 0">limit #{request.size}</if>
+    </select>
+
+    <select id="count" resultType="integer">
+        select count(1)
+        from crm_top_category c
+        where c.deleted = false
+        <if test="request.states != null and request.states.size() > 0">
+            and c.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="get" resultMap="category">
+        <include refid="findCategory"/>
+        where id = #{id} and deleted = false
+    </select>
+
+</mapper>

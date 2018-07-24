@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.store.query.AdminStoreQueryMapper">
+    <resultMap id="store" type="hashmap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="address" property="address"/>
+        <result column="contact" property="contact"/>
+        <result column="open" property="open"/>
+        <result column="close" property="close"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+    <select id="listStore" resultMap="store">
+        select id,name,province,city,address,contact,open,close,state
+        from crm_store
+        where deleted = false
+        order by lastmodifiedDate desc
+        <if test="from > 0">offset #{from}</if>
+        <if test="size > 0">limit #{size}</if>
+    </select>
+
+    <select id="countStore" resultType="integer">
+        select count(1)
+        from crm_store
+        where deleted = false
+    </select>
+
+    <select id="get" resultMap="store">
+        select id,name,province,city,address,contact,open,close,state
+        from crm_store
+        where id = #{id}
+    </select>
+</mapper>

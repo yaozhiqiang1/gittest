@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.customer.query.mapper.CustomerQueryMapper">
+
+
+    <resultMap id="customerDetails" type="com.fongwell.satchi.crm.core.customer.query.dto.CustomerDetails">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="mobile" column="mobile"/>
+        <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <select id="queryCustomerDetailsByMobile" resultMap="customerDetails">
+        select c.id,c.name,c.passwordhash as password,c.deleted,
+         c.mobile from fw_customer c
+        where c.mobile = #{mobile}
+    </select>
+
+
+    <select id="queryCustomerDetails" resultMap="customerDetails">
+
+        select c.id,c.name,c.passwordhash as password,c.deleted,
+        c.mobile from fw_customer c
+        where c.id = #{id}
+    </select>
+
+    <resultMap id="customer" type="com.fongwell.satchi.crm.core.customer.domain.aggregate.Customer">
+        <id property="id" column="id"/>
+        <result property="mobile" column="mobile"/>
+        <result property="storeId" column="storeId"/>
+    </resultMap>
+
+    <select id="queryCustomerStoreId" resultMap="customer">
+        select c.id,c.mobile,c.storeid from fw_customer c where c.id = #{customerId} and c.storeid = #{storeId}
+    </select>
+
+    <update id="updateCustomer">
+        update fw_customer set storeid = #{storeId} where id = #{customerId}
+    </update>
+
+    <select id="queryByMobile" resultType="long">
+        select c.id from fw_customer c where c.mobile = #{mobile}
+    </select>
+
+    <select id="queryCheckindate" resultType="date">
+        select checkindate from crm_customer_credit where customerid = #{customerId};
+    </select>
+
+    <select id="queryCustomerStore" resultType="long">
+        select storeid from fw_customer where id = #{customerId}
+    </select>
+</mapper>

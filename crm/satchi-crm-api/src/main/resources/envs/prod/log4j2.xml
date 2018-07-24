@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="defaultConfiguration" status="warn" strict="true" monitorInterval="5">
+    <Properties>
+        <Property name="patternlayout">%d %p %c{1.} [%t] %m%n</Property>
+        <Property name="filename">logs/crm.log</Property>
+        <Property name="filenamePattern">logs/crm-%d{yyyy-dd-MM}-%i.log.gz</Property>
+    </Properties>
+    <Appenders>
+        <RollingRandomAccessFile name="RollingRandomAccessFile" fileName="${filename}"
+                                 filePattern="${filenamePattern}">
+            <PatternLayout>
+                <Pattern>${patternlayout}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+
+        <Async name="AsyncFile" bufferSize="256">
+            <AppenderRef ref="RollingRandomAccessFile"/>
+        </Async>
+
+
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="AsyncFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.product.query.ProductInfoQueryMapper">
+
+
+
+    <select id="queryActiveSkuInfos" resultType="com.fongwell.satchi.crm.core.product.dto.SkuInfo">
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> remotes/crm/master
+        select sku.id, product.name, product.id  as productId,sku.number as skuNumber,
+        product.mobileImage,product.pcImage, mobileImage as imageUrl
+        from crm_sku sku inner join crm_product product on product.id = sku.product_id
+        where sku.id in
+        <foreach collection="skuIds" item="skuId" open="(" close=")" separator=",">
+            #{skuId}
+        </foreach>
+        and product.deleted = false and product.state = 'enable'
+    </select>
+
+
+</mapper>

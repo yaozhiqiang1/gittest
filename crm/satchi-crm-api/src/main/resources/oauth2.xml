@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:util="http://www.springframework.org/schema/util"
+         xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+         xmlns="http://www.springframework.org/schema/security"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd
+           http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+ http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <b:bean class="org.springframework.security.web.context.NullSecurityContextRepository"
+            id="securityContextRepository"/>
+
+    <b:bean class="org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy"
+            id="authenticatedSessionStrategy"/>
+
+
+    <b:bean class="com.fongwell.satchi.crm.api.security.filter.DelegatingAntPathMatcherFilter" id="adminResourceFilter">
+        <b:constructor-arg index="0" value="/api/admin/**"/>
+        <b:constructor-arg index="1">
+            <b:bean class="org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter">
+                <b:property name="stateless" value="false"/>
+                <b:property name="authenticationManager" ref="adminOAuth2AuthenticationManager"/>
+                <b:property name="tokenExtractor" ref="tokenExtractor"/>
+
+            </b:bean>
+        </b:constructor-arg>
+    </b:bean>
+
+
+    <b:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <b:property name="tokenStore" ref="tokenStore"/>
+        <b:property name="tokenEnhancer" ref="jwtAccessTokenConverter"/>
+
+    </b:bean>
+
+    <b:bean class="org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor"
+            id="tokenExtractor"/>
+
+
+    <b:bean class="com.fongwell.satchi.crm.api.authentication.error.RestAuthenticationEntryPoint"
+            id="authenticationEntryPoint"/>
+
+    <b:bean class="com.fongwell.satchi.crm.api.access.RestAccessDeniedHandler" id="accessDeniedHandler"/>
+
+    <!--   <b:bean class="com.fongwell.sanhui.api.authentication.AdminAuthenticationFilter"
+               id="adminAuthenticationFilter">
+           <b:constructor-arg index="0" value="/api/admin/**"/>
+           <b:constructor-arg index="1" ref="adminUserDetailsService"/>
+       </b:bean>-->
+
+    <b:bean class="org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager"
+            id="adminOAuth2AuthenticationManager">
+        <b:property name="resourceId" value="satchi-crm-admin"/>
+        <b:property name="tokenServices" ref="tokenServices"/>
+    </b:bean>
+
+
+    <b:bean class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService"
+            id="clientDetailsService">
+        <b:constructor-arg index="0" ref="dataSource"/>
+    </b:bean>
+
+    <b:bean class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService"
+            id="clientDetailsUserDetailsService">
+        <b:constructor-arg index="0" ref="clientDetailsService"/>
+
+    </b:bean>
+
+    <authentication-manager id="wxStoreMobileVerifyAuthenticationManager">
+        <authentication-provider user-service-ref="wxStoreUserDetailsService">
+            <password-encoder ref="byPassPasswordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <authentication-manager id="clientDetailsAuthenticationManager">
+        <authentication-provider user-service-ref="clientDetailsUserDetailsService"/>
+    </authentication-manager>
+
+    <authentication-manager id="wxMobileVerifyAuthenticationManager">
+        <authentication-provider user-service-ref="wxCustomerDetailsService">
+            <password-encoder ref="byPassPasswordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <b:bean id="byPassPasswordEncoder"
+            class="com.fongwell.satchi.crm.core.common.crypto.password.ByPassPasswordEncoder"/>
+
+    <!--
+        <authentication-manager id="adminAuthenticationManager">
+            <authentication-provider user-service-ref="adminUserDetailsService">
+                <password-encoder ref="passwordEncoder"/>
+            </authentication-provider>
+        </authentication-manager>-->
+
+
+    <oauth2:authorization-server
+            token-endpoint-url="/oauth/token"
+            check-token-enabled="true"
+            token-services-ref="tokenServices"
+            client-details-service-ref="clientDetailsService"
+    >
+
+        <oauth2:refresh-token/>
+        <oauth2:custom-grant token-granter-ref="multiPlatformGranter"/>
+        <oauth2:custom-grant token-granter-ref="wxStoreGranter"/>
+
+    </oauth2:authorization-server>
+
+    <b:bean class="com.fongwell.satchi.crm.api.security.oauth2.token.grant.CustomPasswordTokenGranter"
+            id="wxStoreGranter">
+        <b:constructor-arg index="0" ref="wxStoreMobileVerifyAuthenticationManager"/>
+        <b:constructor-arg index="1" ref="tokenServices"/>
+        <b:constructor-arg index="2" ref="clientDetailsService"/>
+        <b:constructor-arg index="3">
+            <b:bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
+                <b:constructor-arg index="0" ref="clientDetailsService"/>
+            </b:bean>
+        </b:constructor-arg>
+        <b:constructor-arg index="4" value="wxStore"/>
+    </b:bean>
+
+    <b:bean class="com.fongwell.satchi.crm.api.security.oauth2.token.grant.MultiPlatformGranter"
+            id="multiPlatformGranter">
+        <b:constructor-arg index="0">
+            <util:map>
+                <b:entry key="wx" value-ref="wxTokenGranter"/>
+                <b:entry key="admin" value-ref="adminTokenGranter"/>
+                <b:entry key="verify" value-ref="wxMobileVerifyTokenGranter"/>
+            </util:map>
+        </b:constructor-arg>
+        <b:constructor-arg index="1" ref="tokenServices"/>
+        <b:constructor-arg index="2" ref="clientDetailsService"/>
+        <b:constructor-arg index="3" ref="oAuth2RequestFactory"/>
+    </b:bean>
+
+    <!--
+        <b:bean class="org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter"
+                id="adminTokenGranter">
+            <b:constructor-arg index="0" ref="adminAuthenticationManager"/>
+            <b:constructor-arg index="1" ref="tokenServices"/>
+            <b:constructor-arg index="2" ref="clientDetailsService"/>
+            <b:constructor-arg index="3" ref="oAuth2RequestFactory"/>
+        </b:bean>
+    -->
+
+    <b:bean class="org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter"
+            id="wxTokenGranter">
+        <b:constructor-arg index="0" ref="wxAuthenticationManager"/>
+        <b:constructor-arg index="1" ref="tokenServices"/>
+        <b:constructor-arg index="2" ref="clientDetailsService"/>
+        <b:constructor-arg index="3" ref="oAuth2RequestFactory"/>
+    </b:bean>
+
+    <b:bean class="org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter"
+            id="adminTokenGranter">
+        <b:constructor-arg index="0" ref="wxAuthenticationManager"/>
+        <b:constructor-arg index="1" ref="tokenServices"/>
+        <b:constructor-arg index="2" ref="clientDetailsService"/>
+        <b:constructor-arg index="3" ref="oAuth2RequestFactory"/>
+    </b:bean>
+
+    <b:bean class="org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter"
+            id="wxMobileVerifyTokenGranter">
+        <b:constructor-arg index="0" ref="wxMobileVerifyAuthenticationManager"/>
+        <b:constructor-arg index="1" ref="tokenServices"/>
+        <b:constructor-arg index="2" ref="clientDetailsService"/>
+        <b:constructor-arg index="3" ref="oAuth2RequestFactory"/>
+    </b:bean>
+
+
+    <b:bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory"
+            id="oAuth2RequestFactory">
+        <b:constructor-arg index="0" ref="clientDetailsService"/>
+    </b:bean>
+
+
+    <b:bean class="org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager"
+            id="wxOAuth2AuthenticationManager">
+        <b:property name="resourceId" value="satchi-crm-wx"/>
+        <b:property name="tokenServices" ref="tokenServices"/>
+    </b:bean>
+
+
+    <b:bean class="com.fongwell.satchi.crm.api.security.filter.DelegatingAntPathMatcherFilter" id="wxResourceFilter">
+        <b:constructor-arg index="0" value="/api/wx/**"/>
+        <b:constructor-arg index="1">
+            <b:bean class="org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter">
+                <b:property name="stateless" value="false"/>
+                <b:property name="authenticationManager" ref="wxOAuth2AuthenticationManager"/>
+                <b:property name="tokenExtractor" ref="tokenExtractor"/>
+            </b:bean>
+        </b:constructor-arg>
+        <b:property name="beanName" value="wxResourceFilter"/>
+    </b:bean>
+
+
+    <b:bean class="com.fongwell.satchi.crm.api.authentication.wx.WxCustomerAuthenticationFilter"
+            id="wxCustomerAuthenticationFilter">
+        <b:constructor-arg index="0" value="/api/wx/**"/>
+        <b:constructor-arg index="1" ref="customerAuthenticationService"/>
+        <b:constructor-arg index="2" ref="wxUserBindingService"/>
+    </b:bean>
+
+
+    <!--    <http pattern="/api/admin/**" entry-point-ref="authenticationEntryPoint"
+              security-context-repository-ref="securityContextRepository"
+              authentication-manager-ref="adminAuthenticationManager" create-session="never">
+            <intercept-url pattern="/api/admin/**" access="isFullyAuthenticated() and hasRole('ADMIN_USER')"/>
+            <access-denied-handler ref="accessDeniedHandler"/>
+
+            <custom-filter ref="adminResourceFilter" before="PRE_AUTH_FILTER"/>
+            <custom-filter ref="adminAuthenticationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
+            <csrf disabled="true"/>
+        </http>-->
+
+    <b:bean class="com.fongwell.satchi.crm.api.security.filter.DelegatingAntPathMatcherFilter" id="wxOAuthFilter">
+        <b:constructor-arg index="0" value="/oauth/wx"/>
+        <b:constructor-arg index="1">
+            <b:bean class="com.fongwell.satchi.crm.wx.oauth.filter.WxAuthenticationFilter">
+                <b:constructor-arg index="0" value="${wx.defaultClient}"/>
+                <b:constructor-arg index="1" ref="wxRedirectStrategy"/>
+                <b:constructor-arg index="2" ref="wxAuthenticationManager"/>
+            </b:bean>
+        </b:constructor-arg>
+    </b:bean>
+
+    <http pattern="/oauth/wx" authentication-manager-ref="clientDetailsAuthenticationManager"
+          entry-point-ref="authenticationEntryPoint" create-session="never"
+          security-context-repository-ref="securityContextRepository">
+        <csrf disabled="true"/>
+
+        <custom-filter ref="wxOAuthFilter" before="LOGOUT_FILTER"/>
+    </http>
+
+
+    <b:bean class="com.fongwell.satchi.crm.wx.oauth.WxAuthenticationProvider" id="wxAuthenticationProvider">
+        <b:constructor-arg index="0" ref="weixinAccountRepository"/>
+        <b:constructor-arg index="1" ref="wxTokenStore"/>
+        <b:constructor-arg index="2" ref="wxUserStore"/>
+    </b:bean>
+
+    <authentication-manager alias="wxAuthenticationManager">
+        <authentication-provider ref="wxAuthenticationProvider"/>
+        <authentication-provider user-service-ref="wxCustomerDetailsService">
+            <password-encoder ref="passwordEncoder"/>
+        </authentication-provider>
+    </authentication-manager>
+
+    <http pattern="/oauth/token" authentication-manager-ref="clientDetailsAuthenticationManager"
+          entry-point-ref="authenticationEntryPoint" create-session="never"
+          security-context-repository-ref="securityContextRepository">
+        <intercept-url pattern="/oauth/token" access="isFullyAuthenticated()" method="POST"/>
+        <http-basic/>
+
+        <csrf disabled="true"/>
+    </http>
+
+    <b:bean class="com.fongwell.satchi.crm.api.authentication.wx.WxStoreAuthenticationFilter" id="wxStoreAuthenticationFilter">
+        <b:constructor-arg index="0" value="/api/wx/store/**"/>
+        <b:constructor-arg index="1" ref="wxStoreUserDetailsService"/>
+    </b:bean>
+
+    <http pattern="/api/wx/store/**" entry-point-ref="authenticationEntryPoint"
+          security-context-repository-ref="securityContextRepository"
+          authentication-manager-ref="wxAuthenticationManager" create-session="never">
+
+        <intercept-url pattern="/api/wx/store/**" access="hasRole('WX_STAFF')"/>
+
+        <access-denied-handler ref="accessDeniedHandler"/>
+        <csrf disabled="true"/>
+        <anonymous enabled="true"/>
+        <custom-filter ref="wxResourceFilter" before="PRE_AUTH_FILTER"/>
+
+        <custom-filter ref="wxStoreAuthenticationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
+    </http>
+
+
+    <http pattern="/api/wx/**" entry-point-ref="authenticationEntryPoint"
+          security-context-repository-ref="securityContextRepository"
+          authentication-manager-ref="wxAuthenticationManager" create-session="never">
+
+        <intercept-url pattern="/api/wx/checkout" access="hasRole('ROLE_CUSTOMER')"/>
+        <intercept-url pattern="/api/wx/checkout/**" access="hasRole('ROLE_CUSTOMER')"/>
+
+        <intercept-url pattern="/api/wx/bookmarks" access="hasRole('ROLE_CUSTOMER')"/>
+        <intercept-url pattern="/api/wx/bookmarks/**" access="hasRole('ROLE_CUSTOMER')"/>
+
+        <intercept-url pattern="/api/wx/orders" access="hasRole('ROLE_CUSTOMER')"/>
+        <intercept-url pattern="/api/wx/orders/**" access="hasRole('ROLE_CUSTOMER')"/>
+
+        <intercept-url pattern="/api/wx/profile" access="hasRole('ROLE_CUSTOMER')"/>
+
+
+        <intercept-url pattern="/api/wx/login" access="hasRole('ROLE_WX_USER')"/>
+        <intercept-url pattern="/api/wx/register" access="hasRole('ROLE_WX_USER')"/>
+       <!-- <intercept-url pattern="/api/wx/register" access="hasAnyRole('ROLE_WX_USER','ROLE_CUSTOMER')"/>-->
+        <intercept-url pattern="/api/wx/info" access="hasAnyRole('ROLE_WX_USER','ROLE_CUSTOMER')"/>
+
+        <intercept-url pattern="/api/wx/**" access="permitAll()"/>
+
+        <access-denied-handler ref="accessDeniedHandler"/>
+        <csrf disabled="true"/>
+        <anonymous enabled="true"/>
+        <custom-filter ref="wxResourceFilter" before="PRE_AUTH_FILTER"/>
+
+        <custom-filter ref="wxCustomerAuthenticationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
+    </http>
+
+    <http pattern="/**" security="none"/>
+</b:beans>

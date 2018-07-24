@@ -1,0 +1,22 @@
+
+---
+- hosts: servers
+  remote_user: docker
+  tasks:
+  - command: mkdir -p {{archive_path}} {{deploy_path}}/logs
+    sudo: yes
+  - command: docker stop {{docker_container}}
+    ignore_errors: yes
+  - command: mv {{deploy_path}}/erp-event.tar {{archive_path}}/erp-event.tar.{{ansible_date_time.iso8601}}
+    ignore_errors: True
+    sudo: yes
+  - copy: src="{{workspace}}/erp-event.tar" dest="{{deploy_path}}/erp-event.tar"
+    sudo: yes
+  - command: rm {{deploy_path}}/erp-event.jar && rm -r {{deploy_path}}/lib
+    ignore_errors: True
+    sudo: yes
+  - command: tar --strip-components 1 -xvf {{deploy_path}}/erp-event.tar -C {{deploy_path}}
+    sudo: yes
+  - command: docker rm {{docker_container}}
+    ignore_errors: yes
+  - command: docker run -d --name {{docker_container}} --net host -v {{deploy_path}}/logs:/logs -v {{deploy_path}}:/app dockerhub.fongwell.com/java:java7 /bin/bash -c "java -jar {{java_opts}} /app/erp-api.jar"

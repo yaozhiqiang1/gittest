@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.product.query.AdminProductQueryMapper">
+
+    <resultMap id="product" type="hashmap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="number" property="number"/>
+        <result column="postage" property="postage"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="state" property="state"/>
+        <result column="categoryId" property="categoryId"/>
+        <result column="categoryName" property="categoryName"/>
+        <result column="introduction" property="introduction"/>
+        <result column="composition" property="composition"/>
+        <result column="inventory" property="inventory"/>
+        <result column="type" property="type"/>
+        <result column="orderNumber" property="orderNumber"/>
+        <association property="settings" javaType="hashmap" column="id" select="selectSettings"/>
+        <collection property="pcImages" column="id" select="selectPcImages"/>
+        <collection property="pcVideos" column="id" select="selectPcVideos"/>
+        <collection property="mobileImages" column="id" select="selectMobileImages"/>
+        <collection property="mobileVideos" column="id" select="selectMobileVideos"/>
+        <collection property="attaches" column="id" select="selectAttaches"/>
+    </resultMap>
+
+    <resultMap id="sourceUrl" type="hashmap">
+        <result column="sourceUrl" property="sourceUrl"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <resultMap id="attach" type="hashmap">
+        <result column="key" property="key"/>
+        <result column="value" property="value"/>
+    </resultMap>
+
+    <resultMap id="settings" type="hashmap">
+        <result column="type" property="type"/>
+        <result column="price" property="price"/>
+        <result column="retrictionType" property="retrictionType"/>
+        <result column="retrictionAmount" property="retrictionAmount"/>
+        <result column="credit" property="credit"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="product">
+        select p.id,p.name,p.number,p.createdDate,p.state,c.name as categoryName,c.id as categoryId,p.postage,setting.type,inv.inventory,p.orderNumber
+        from crm_product p
+        left join crm_sku sku on sku.product_id = p.id and sku.deleted = false
+        left join crm_sku_inventory inv on inv.sku_id = sku.id
+        left join crm_category c on c.id = p.categoryId and c.deleted = false
+        left join crm_product_settings setting on setting.product_id = p.id
+        where p.deleted = false
+        <if test="request.query != null and request.query != ''">
+            <bind name="dataQuery" value="'%'+request.query+'%'"/>
+            and (p.name ilike #{dataQuery} or p.number ilike  #{dataQuery})
+        </if>
+        <if test="request.categoryIds != null and request.categoryIds.size() > 0">
+            and c.id in
+            <foreach collection="request.categoryIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="request.numbers != null and request.numbers.size() > 0">
+            and p.number in
+            <foreach collection="request.numbers" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="request.states != null and request.states.size() > 0">
+            and p.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by p.orderNumber,p.lastmodifiedDate desc
+        <if test="request.from > 0">offset #{request.from}</if>
+        <if test="request.size > 0">limit #{request.size}</if>
+    </select>
+
+    <select id="count" resultType="integer">
+        select count(1)
+        from crm_product p
+        left join crm_category c on c.id = p.categoryId and c.deleted = false
+        where p.deleted = false
+        <if test="request.query != null and request.query != ''">
+            <bind name="dataQuery" value="'%'+request.query+'%'"/>
+            and (p.name ilike #{dataQuery} or p.number ilike  #{dataQuery})
+        </if>
+        <if test="request.categoryIds != null and request.categoryIds.size() > 0">
+            and c.id in
+            <foreach collection="request.categoryIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="request.numbers != null and request.numbers.size() > 0">
+            and p.number in
+            <foreach collection="request.numbers" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="request.states != null and request.states.size() > 0">
+            and p.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="get" resultMap="product">
+        select p.id,p.name,p.number,p.createdDate,p.state,c.name as categoryName,c.id as categoryId,p.postage,
+        p.introduction,p.composition,inv.inventory,p.delivery,p.orderNumber
+        from crm_product p
+        left join crm_sku sku on sku.product_id = p.id and sku.deleted = false
+<<<<<<< HEAD
+        left join crm_sku_inventory inv on inv.sku_id = sku.inventory_sku_id
+=======
+        left join crm_sku_inventory inv on inv.sku_id = sku.id
+>>>>>>> remotes/crm/master
+        left join crm_category c on c.id = p.categoryId and c.deleted = false
+        where p.deleted = false and p.id = #{id}
+    </select>
+
+    <select id="selectPcImages" resultMap="sourceUrl">
+        select source.sourceUrl,source.type
+        from crm_product_pcImages pcSource
+        inner join crm_product_source source on source.id = pcSource.source_id
+        where product_id = #{id}
+    </select>
+
+    <select id="selectMobileImages" resultMap="sourceUrl">
+        select source.sourceUrl,source.type
+        from crm_product_mobileImages pcSource
+        inner join crm_product_source source on source.id = pcSource.source_id
+        where product_id = #{id}
+    </select>
+
+    <select id="selectPcVideos" resultMap="sourceUrl">
+        select source.sourceUrl,source.type
+        from crm_product_pcVideos pcSource
+        inner join crm_product_source source on source.id = pcSource.source_id
+        where product_id = #{id}
+    </select>
+
+    <select id="selectMobileVideos" resultMap="sourceUrl">
+        select source.sourceUrl,source.type
+        from crm_product_mobileVideos pcSource
+        inner join crm_product_source source on source.id = pcSource.source_id
+        where product_id = #{id}
+    </select>
+
+    <select id="selectAttaches" resultMap="attach">
+        select a.key,a.value
+        from crm_product_attach a
+        where product_id = #{id}
+        order by ordernumber
+    </select>
+
+    <select id="selectSettings" resultMap="settings">
+        select setting.type,setting.restrictionType,setting.restrictionAmount,setting.price,
+        case when setting.type = 'GIFT' then setting.credit else null end as credit,
+        case when setting.type = 'COMMODITY' then setting.originalPrice else null end as originalPrice,
+        case when setting.type = 'GIFT' then setting.startDate else null end as startDate,
+        case when setting.type = 'GIFT' then setting.endDate else null end as endDate
+        from crm_product_settings setting
+        where product_id = #{id}
+    </select>
+</mapper>

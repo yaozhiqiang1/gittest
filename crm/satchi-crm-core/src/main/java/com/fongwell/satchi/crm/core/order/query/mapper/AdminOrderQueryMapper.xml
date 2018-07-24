@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.order.query.mapper.AdminOrderQueryMapper">
+
+
+    <resultMap id="orderListItem" type="map">
+        <id property="id" column="id"/>
+        <result property="price" column="price"/>
+        <result property="salePrice" column="salePrice"/>
+        <result property="state" column="state"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="paymentGatewayType" column="paymentGatewayType"/>
+        <result property="trackingNumber" column="trackingNumber"/>
+        <result property="gatewaytype" column="gatewaytype"/>
+    </resultMap>
+
+    <sql id="ordersListWhere">
+        <where>
+            <if test="start != null and end != null">
+                date_trunc('day',o.createdDate) between #{start} and #{end}
+            </if>
+
+            <if test="states != null and states.size() > 0">
+                and o.state in
+                <foreach collection="states" item="state" open="(" close=")" separator=",">
+                    #{state}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+    <select id="queryOrders" resultMap="orderListItem">
+
+        select o.id, o.price,o.salePrice,o.state,
+        o.createdDate,paymentGatewayType,
+        ship.trackingNumber,
+        payment.gatewaytype
+        from crm_order o
+        left join crm_shipping ship on ship.order_id = o.id
+        left join crm_order_payment payment on payment.order_id = o.id
+        <include refid="ordersListWhere"/>
+        order by o.createdDate desc
+        offset #{from}
+        limit #{size}
+    </select>
+
+    <select id="countOrders" resultType="int">
+
+        select count(1) from crm_order o
+        <include refid="ordersListWhere"/>
+
+    </select>
+
+
+    <resultMap id="orderDetail" type="hashmap">
+        <id property="id" column="id"/>
+        <result property="price" column="price"/>
+        <result property="salePrice" column="salePrice"/>
+        <result property="state" column="state"/>
+        <result property="createdDate" column="createdDate"/>
+        <result property="paymentGatewayType" column="paymentGatewayType"/>
+
+        <association property="payment" javaType="hashmap">
+
+            <result column="payment_transactionId" property="transactionId"/>
+            <result column="payment_amount" property="amount"/>
+            <result column="payment_paymentDate" property="paymentDate"/>
+        </association>
+
+        <association property="shipping" javaType="hashmap">
+            <result column="shipping_receiver" property="receiver"/>
+            <result column="shipping_contactNumber" property="contactNumber"/>
+            <result column="shipping_province" property="province"/>
+            <result column="shipping_city" property="city"/>
+            <result column="shipping_district" property="district"/>
+            <result column="shipping_address" property="address"/>
+            <result column="shipping_postcode" property="postcode"/>
+            <result property="trackingNumber" column="trackingNumber"/>
+        </association>
+
+        <collection property="items" javaType="java.util.LinkedList" ofType="hashmap">
+            <id column="item_id" property="id"/>
+            <result column="item_name" property="name"/>
+            <result column="item_skuId" property="skuId"/>
+            <result column="item_quantity" property="quantity"/>
+            <result column="item_price" property="price"/>
+            <result column="item_salePrice" property="salePrice"/>
+            <result column="item_totalSalePrice" property="totalSalePrice"/>
+            <result column="item_totalPrice" property="totalPrice"/>
+            <result column="item_productId" property="productId"/>
+            <result column="item_image" property="image"/>
+            <result column="item_number" property="number"/>
+            <result column="item_category" property="category"/>
+        </collection>
+
+
+    </resultMap>
+
+    <select id="findOrder" resultMap="orderDetail">
+        select o.id, o.price,o.salePrice,o.state,
+        o.createdDate,o.paymentGatewayType,
+        shipping_receiver,shipping_contactNumber,
+        shipping_province,shipping_city,
+        shipping_district,shipping_address,shipping_postcode,
+        ship.trackingNumber,
+        payment.transactionId as payment_transactionId,
+        payment.amount as payment_amount,
+        payment.paymentDate as payment_paymentDate,
+        item.id as item_id, item.name as item_name,
+        item.sku_id as item_skuId, item.quantity as item_quantity,
+        item.price as item_price, item.salePrice as item_salePrice,
+        item.totalSalePrice as item_totalSalePrice,
+        item.totalPrice as item_totalPrice,
+        item.product_id as item_productId,
+        item.skuNumber as item_number,
+        item.pcImage as item_image,
+        c.name as item_category
+        from crm_order o
+        left join crm_order_item item on item.order_id = o.id
+        left join crm_shipping ship on ship.order_id = o.id
+        left join crm_order_payment payment on payment.order_id = o.id
+        left join crm_product p on p.id = item.product_id
+        left join crm_category c on c.id = p.categoryId
+        where o.id = #{id}
+
+    </select>
+</mapper>

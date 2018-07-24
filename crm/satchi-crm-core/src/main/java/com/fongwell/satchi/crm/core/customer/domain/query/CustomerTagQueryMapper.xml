@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.customer.domain.query.CustomerTagQueryMapper">
+
+    <resultMap id="userTags" type="com.fongwell.satchi.crm.core.customer.domain.query.UserTagsDto">
+        <id column="customer_id" property="id"/>
+        <collection property="tags" ofType="java.lang.String" javaType="java.util.ArrayList">
+            <id column="tag"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="queryTags" resultMap="userTags">
+        select customer_id, tag
+        from crm_customer_tag where customer_id in
+        <foreach collection="customerIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="searchCustomersWithTags" resultType="java.lang.Long">
+        select DISTINCT customer_id from
+        crm_customer_tag where tag IN
+        <foreach collection="tags" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="queryTagsForCustomer" resultType="string">
+    select tag from crm_customer_tag where customer_id = #{customerId}
+</select>
+</mapper>

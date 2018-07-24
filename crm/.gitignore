@@ -1,0 +1,21 @@
+target/
+bin/
+logs/
+**.bak
+.sync
+out/
+rebel.xml
+build/
+templates_build
+classes
+*.iml
+.sass-cache
+.settings/
+.classpath
+.project
+.idea/
+.xls
+<<<<<<< HEAD
+.idea
+=======
+>>>>>>> remotes/crm/master

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.credit.query.mapper.CreditConfigurationQueryMapper">
+
+
+    <resultMap id="config" type="java.util.HashMap">
+        <result property="enabled" column="enabled"/>
+        <result property="expiration" column="expiration"/>
+        <association property="consumeConfiguration" javaType="java.util.HashMap">
+            <result property="credit" column="ccc_credit"/>
+            <result property="cash" column="ccc_cash"/>
+            <result property="enabled" column="ccc_enabled"/>
+            <result property="option" column="ccc_option"/>
+            <result property="maxCreditPerOrder" column="ccc_maxCreditPerOrder"/>
+            <result property="maxDiscountPercentage" column="ccc_maxDiscountPercentage"/>
+        </association>
+        <collection property="sources" ofType="java.util.HashMap" javaType="java.util.LinkedList">
+            <result property="credit" column="s_credit"/>
+            <result property="type" column="s_type"/>
+            <result property="enabled" column="s_enabled"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="queryConfiguration" resultMap="config">
+
+select cc.enabled, cc.expiration,
+csc.credit as s_credit,
+csc.type as s_type,
+csc.enabled as s_enabled,
+ccc.credit as ccc_credit,
+ccc.cash as ccc_cash,
+ccc.enabled as ccc_enabled,
+ccc.maxCreditPerOrder as ccc_maxCreditPerOrder,
+ccc.maxDiscountPercentage as ccc_maxDiscountPercentage,
+ccc.option as ccc_option
+from crm_credit_configuration cc
+left join crm_credit_source_configuration csc on csc.parent_id = cc.id
+left join crm_credit_consume_configuration ccc on ccc.id = cc.id
+where cc.id = #{id}
+    </select>
+
+    <resultMap id="queryExpiration" type="java.util.HashMap">
+        <result property="expiration" column="expiration"/>
+    </resultMap>
+    <select id="queryCreditConfigurationExpiration" resultMap="queryExpiration">
+        select expiration from crm_credit_configuration where id = #{id}
+    </select>
+
+</mapper>
+
+

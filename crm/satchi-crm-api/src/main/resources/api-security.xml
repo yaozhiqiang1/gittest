@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:util="http://www.springframework.org/schema/util"
+         xmlns="http://www.springframework.org/schema/security"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd
+
+ http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <b:bean class="org.springframework.web.cors.CorsConfiguration" id="apiCorsConfiguration">
+
+        <b:property name="allowCredentials" value="true"/>
+        <b:property name="allowedHeaders" value="*"/>
+        <b:property name="maxAge" value="86400000"/>
+        <b:property name="allowedMethods">
+            <util:list>
+                <b:value>GET</b:value>
+                <b:value>OPTIONS</b:value>
+                <b:value>PUT</b:value>
+                <b:value>POST</b:value>
+                <b:value>DELETE</b:value>
+
+            </util:list>
+        </b:property>
+        <b:property name="allowedOrigins" value="*"/>
+
+    </b:bean>
+
+    <b:bean class="org.springframework.web.filter.CorsFilter" id="corsFilter">
+        <b:constructor-arg index="0">
+            <b:bean class="org.springframework.web.cors.UrlBasedCorsConfigurationSource">
+
+                <b:property name="corsConfigurations">
+                    <util:map>
+                        <b:entry key="/api/**" value-ref="apiCorsConfiguration"/>
+                        <b:entry key="/resource/**" value-ref="apiCorsConfiguration"/>
+                    </util:map>
+
+                </b:property>
+            </b:bean>
+        </b:constructor-arg>
+
+    </b:bean>
+
+
+    <b:bean id="oauthAuthenticationEntryPoint"
+            class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+
+    </b:bean>
+
+
+    <b:bean class="org.springframework.security.access.vote.AffirmativeBased" id="voteManager">
+
+        <b:constructor-arg index="0">
+
+            <b:list>
+
+                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+                <b:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <b:property name="expressionHandler" ref="expressionHandler"/>
+                </b:bean>
+                <b:bean class="org.springframework.security.access.vote.RoleVoter">
+                    <b:property name="rolePrefix" value=""/>
+                </b:bean>
+                <b:bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <b:bean class="org.springframework.security.access.vote.RoleVoter">
+                    <b:property name="rolePrefix" value="PERMISSION_"/>
+                </b:bean>
+
+            </b:list>
+
+        </b:constructor-arg>
+
+    </b:bean>
+
+    <b:bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"
+            id="expressionHandler" primary="true">
+
+    </b:bean>
+
+    <global-method-security pre-post-annotations="enabled">
+
+        <expression-handler ref="expressionHandler"/>
+
+    </global-method-security>
+
+
+</b:beans>

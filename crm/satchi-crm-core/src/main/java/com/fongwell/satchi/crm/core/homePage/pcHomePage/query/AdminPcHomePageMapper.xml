@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fongwell.satchi.crm.core.homePage.pcHomePage.query.AdminPcHomePageMapper">
+
+    <resultMap id="homePage" type="hashmap">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="imageUrl" property="imageUrl"/>
+        <result column="videoUrl" property="videoUrl"/>
+        <result column="url" property="url"/>
+        <result column="button" property="button"/>
+        <result column="source" property="source"/>
+        <result column="introduction" property="introduction"/>
+        <result column="opacity" property="opacity"/>
+        <result column="state" property="state"/>
+        <result column="createdDate" property="createdDate"/>
+        <result column="orderNumber" property="orderNumber"/>
+        <association property="linkConfig" javaType="java.util.HashMap">
+            <result column="link_type" property="type"/>
+            <result column="link_id" property="id"/>
+        </association>
+    </resultMap>
+
+    <sql id="findHomePage">
+        select p.state,
+        link_type,link_id,
+        p.id,p.title,p.imageUrl,p.createdDate,p.orderNumber,p.videoUrl,p.button,p.source,p.introduction,p.opacity,p.url,
+        case when p.state = 'enable' then 0
+             when p.state = 'disable' then 1
+             else 1 end as o
+        from crm_pc_home_page p
+    </sql>
+
+    <select id="findAll" resultMap="homePage">
+        <include refid="findHomePage"/>
+
+        where deleted = false
+        <if test="request.query != null and request.query != ''">
+            <bind name="queryDate" value="'%'+request.query+'%'"/>
+            and p.title ilike #{queryDate}
+        </if>
+        <if test="request.states != null and request.states.size() > 0">
+            and p.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by o,lastmodifiedDate
+        <if test="request.from > 0">offset #{request.from}</if>
+        <if test="request.size > 0">limit #{request.size}</if>
+    </select>
+
+    <select id="count" resultType="integer">
+        select count(1)
+        from crm_pc_home_page p
+        where deleted = false
+        <if test="request.query != null and request.query != ''">
+            <bind name="queryDate" value="'%'+request.query+'%'"/>
+            and p.title ilike #{queryDate}
+        </if>
+        <if test="request.states != null and request.states.size() > 0">
+            and p.state in
+            <foreach collection="request.states" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="get" resultMap="homePage">
+        <include refid="findHomePage"/>
+        where id = #{id}
+    </select>
+</mapper>
