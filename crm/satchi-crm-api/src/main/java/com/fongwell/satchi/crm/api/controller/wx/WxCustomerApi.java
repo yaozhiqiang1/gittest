@@ -9,25 +9,12 @@ import com.fongwell.satchi.crm.core.customer.dto.CustomerAuthenticationDetails;
 import com.fongwell.satchi.crm.core.customer.dto.CustomerRegisterRequest;
 import com.fongwell.satchi.crm.core.customer.query.dto.CustomerDetails;
 import com.fongwell.satchi.crm.core.customer.query.mapper.WxCustomerQueryMapper;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import com.fongwell.satchi.crm.core.customer.query.mapper.WxUserMapper;
-=======
->>>>>>> remotes/crm/master
-=======
->>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 import com.fongwell.satchi.crm.core.customer.query.repository.CustomerQueryRepository;
 import com.fongwell.satchi.crm.core.customer.service.CustomerRegistrationService;
 import com.fongwell.satchi.crm.core.store.query.AdminStoreQueryMapper;
 import com.fongwell.satchi.crm.wx.account.vo.Result;
 import com.fongwell.satchi.crm.wx.user.binding.WxUserBindingService;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> remotes/crm/master
-=======
->>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 import com.foxinmy.weixin4j.util.StringUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -58,8 +45,8 @@ public class WxCustomerApi {
     @Autowired
     private WxCustomerQueryMapper wxCustomerQueryMapper;
 
-      @Autowired
-      private AdminStoreQueryMapper adminStoreQueryMapper;
+    @Autowired
+    private AdminStoreQueryMapper adminStoreQueryMapper;
 
     @Resource(name = "wxUserBindingService")
     private WxUserBindingService wxUserBindingService;
@@ -68,15 +55,9 @@ public class WxCustomerApi {
     @Resource(name = "customerQueryRepository")
     private CustomerQueryRepository customerQueryRepository;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     @Autowired
     private WxUserMapper wxUserMapper;
 
-=======
->>>>>>> remotes/crm/master
-=======
->>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
     private HttpSession session;
 
     /**
@@ -91,37 +72,6 @@ public class WxCustomerApi {
 
     @GetMapping("/verificationCode")
     public Payload verificationCode(@RequestParam String codePassword, @RequestParam String mobile) {
-
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-//        try {
-//            String code = (String) session.getAttribute("code");
-//            String mobile1 = (String) session.getAttribute("mobile");
-//            if (code == null || mobile == null) {
-//                return new Payload(false);
-//            }
-//
-//            if (mobile1.equals(mobile) && code.equals(codePassword)) {
-//                Map map = new HashMap(1, 2f);
-//                CustomerDetails customer = customerQueryRepository.queryCustomerDetails(mobile);
-//                if (customer != null) {
-//                    return new Payload("login");
-//                }
-//                map.put("verificationCode", true);
-//                return new Payload(map);
-//            }
-//            return new Payload(false);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new Payload("login");
-//        }
-        Map map = new HashMap(1, 2f);
-        map.put("verificationCode", true);
-               return new Payload(map);
-=======
-=======
->>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
         try {
             String code = (String) session.getAttribute("code");
             String mobile1 = (String) session.getAttribute("mobile");
@@ -141,12 +91,9 @@ public class WxCustomerApi {
             return new Payload(false);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Payload("验证码失效");
         }
-<<<<<<< HEAD
->>>>>>> remotes/crm/master
-=======
->>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
+        return new Payload(false);
+
     }
 
 
@@ -248,40 +195,42 @@ public class WxCustomerApi {
 
     /**
      * 重新绑定
+     *
      * @param storeId
      */
     @GetMapping("/againBindingStore")
-    public void againBindingStore(@RequestParam Long storeId){
+    public void againBindingStore(@RequestParam Long storeId) {
         long customerId = WxCustomerContext.getUser().getCustomerId();
 //        long customerId = 3905997475673344L;
-         customerQueryRepository.updateCustomer(customerId,storeId);
+        customerQueryRepository.updateCustomer(customerId, storeId);
     }
 
     /**
      * 扫码绑定萌门店
+     *
      * @return
      */
-  @GetMapping("/bindingStore")
-  public Payload bindingStore(){
-      //检查用户登录信息是不是用户会员id还是微信id
-      long customerId = WxCustomerContext.getUser().getCustomerId();
+    @GetMapping("/bindingStore")
+    public Payload bindingStore() {
+        //检查用户登录信息是不是用户会员id还是微信id
+        long customerId = WxCustomerContext.getUser().getCustomerId();
 //      long customerId = 3905997475673344L;
-      long storeId = 0;
-      try {
-          storeId = customerQueryRepository.queryCustomerStore(customerId);
-      } catch (Exception e) {
-          e.printStackTrace();
-          return new Payload(false);
-      }
-      if (storeId != 0){
-        Map map = adminStoreQueryMapper.get(storeId);
-        String name = (String) map.get("name");
-          return new Payload(name);
-      }
-      return new Payload(false);
-  }
+        long storeId = 0;
+        try {
+            storeId = customerQueryRepository.queryCustomerStore(customerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Payload(false);
+        }
+        if (storeId != 0) {
+            Map map = adminStoreQueryMapper.get(storeId);
+            String name = (String) map.get("name");
+            return new Payload(name);
+        }
+        return new Payload(false);
+    }
 
-//  @PostMapping("/test")
+    //  @PostMapping("/test")
 //  public void test(@RequestParam String mobile ,@RequestParam Long storeId){ Customer customer = customerQueryRepository.queryCustomerStoreId(mobile,storeId);
 //    System.out.println("测试"+customer.getMobile()+"    "+customer.getStoreId());
 //      Map map = adminStoreQueryMapper.get(storeId);
@@ -289,23 +238,16 @@ public class WxCustomerApi {
 //     customerQueryRepository.updateCustomer(storeId,mobile);
 //     System.out.println("name===" + name);
 //  }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
     @GetMapping("/getWxPortrait")
-    public Payload getWxPortrait(){
+    public Payload getWxPortrait() {
 
 //        String wxId = WxCustomerContext.getWxId();
         String wxId = "ooBmhjrhtQX449mCdSivjC45NOag";
-        if (StringUtils.isNotBlank(wxId)){
+        if (StringUtils.isNotBlank(wxId)) {
             String portraitUrl = wxUserMapper.getWxPortrait(wxId);
             return new Payload(portraitUrl);
         }
-      return new Payload(false);
+        return new Payload(false);
     }
 
-=======
->>>>>>> remotes/crm/master
-=======
->>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 }
