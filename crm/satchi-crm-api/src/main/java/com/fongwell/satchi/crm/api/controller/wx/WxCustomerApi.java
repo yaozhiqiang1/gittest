@@ -10,18 +10,24 @@ import com.fongwell.satchi.crm.core.customer.dto.CustomerRegisterRequest;
 import com.fongwell.satchi.crm.core.customer.query.dto.CustomerDetails;
 import com.fongwell.satchi.crm.core.customer.query.mapper.WxCustomerQueryMapper;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import com.fongwell.satchi.crm.core.customer.query.mapper.WxUserMapper;
 =======
 >>>>>>> remotes/crm/master
+=======
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 import com.fongwell.satchi.crm.core.customer.query.repository.CustomerQueryRepository;
 import com.fongwell.satchi.crm.core.customer.service.CustomerRegistrationService;
 import com.fongwell.satchi.crm.core.store.query.AdminStoreQueryMapper;
 import com.fongwell.satchi.crm.wx.account.vo.Result;
 import com.fongwell.satchi.crm.wx.user.binding.WxUserBindingService;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> remotes/crm/master
+=======
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 import com.foxinmy.weixin4j.util.StringUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,11 +69,14 @@ public class WxCustomerApi {
     private CustomerQueryRepository customerQueryRepository;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @Autowired
     private WxUserMapper wxUserMapper;
 
 =======
 >>>>>>> remotes/crm/master
+=======
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
     private HttpSession session;
 
     /**
@@ -84,6 +93,7 @@ public class WxCustomerApi {
     public Payload verificationCode(@RequestParam String codePassword, @RequestParam String mobile) {
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 //        try {
 //            String code = (String) session.getAttribute("code");
@@ -110,6 +120,8 @@ public class WxCustomerApi {
         map.put("verificationCode", true);
                return new Payload(map);
 =======
+=======
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
         try {
             String code = (String) session.getAttribute("code");
             String mobile1 = (String) session.getAttribute("mobile");
@@ -131,7 +143,10 @@ public class WxCustomerApi {
             e.printStackTrace();
             return new Payload("验证码失效");
         }
+<<<<<<< HEAD
 >>>>>>> remotes/crm/master
+=======
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
     }
 
 
@@ -276,6 +291,7 @@ public class WxCustomerApi {
 //  }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @GetMapping("/getWxPortrait")
     public Payload getWxPortrait(){
 
@@ -290,4 +306,6 @@ public class WxCustomerApi {
 
 =======
 >>>>>>> remotes/crm/master
+=======
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 }

@@ -26,10 +26,14 @@ public interface WxCustomerQueryMapper {
     Map queryDetail(@Param("id") long id);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     Customer queryMobile(String mobile);
 >>>>>>> remotes/crm/master
+=======
+    Customer queryMobile(String mobile);
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
 
 
 

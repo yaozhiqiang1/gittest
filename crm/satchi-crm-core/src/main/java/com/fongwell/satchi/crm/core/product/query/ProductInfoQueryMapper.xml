@@ -6,10 +6,15 @@
 
     <select id="queryActiveSkuInfos" resultType="com.fongwell.satchi.crm.core.product.dto.SkuInfo">
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 >>>>>>> remotes/crm/master
+=======
+
+
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
         select sku.id, product.name, product.id  as productId,sku.number as skuNumber,
         product.mobileImage,product.pcImage, mobileImage as imageUrl
         from crm_sku sku inner join crm_product product on product.id = sku.product_id

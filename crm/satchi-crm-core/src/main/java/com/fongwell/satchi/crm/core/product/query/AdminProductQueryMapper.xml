@@ -115,10 +115,14 @@
         from crm_product p
         left join crm_sku sku on sku.product_id = p.id and sku.deleted = false
 <<<<<<< HEAD
+<<<<<<< HEAD
         left join crm_sku_inventory inv on inv.sku_id = sku.inventory_sku_id
 =======
         left join crm_sku_inventory inv on inv.sku_id = sku.id
 >>>>>>> remotes/crm/master
+=======
+        left join crm_sku_inventory inv on inv.sku_id = sku.id
+>>>>>>> 1e9c47c378b92c957a3b4d33a2d332283afda506
         left join crm_category c on c.id = p.categoryId and c.deleted = false
         where p.deleted = false and p.id = #{id}
     </select>
