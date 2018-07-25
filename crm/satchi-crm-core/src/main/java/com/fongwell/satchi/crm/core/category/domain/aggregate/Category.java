@@ -73,7 +73,29 @@ public class Category extends AbstractAggregateRoot {
         return mobileImageUrl;
     }
 
-    public int getOrderNumber() {
+    
+    public void setPcImageUrl(String pcImageUrl) {
+		this.pcImageUrl = pcImageUrl;
+	}
+
+	public void setMobileImageUrl(String mobileImageUrl) {
+		this.mobileImageUrl = mobileImageUrl;
+	}
+
+	public void setOrderNumber(int orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+
+	public int getOrderNumber() {
         return orderNumber;
     }
+
+	@Override
+	public String toString() {
+		return "Category [name=" + name + ", pcImageUrl=" + pcImageUrl + ", mobileImageUrl=" + mobileImageUrl
+				+ ", orderNumber=" + orderNumber + "]";
+	}
+	
+	
+    
 }

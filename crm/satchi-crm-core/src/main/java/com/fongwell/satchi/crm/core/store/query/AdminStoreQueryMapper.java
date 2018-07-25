@@ -1,5 +1,6 @@
 package com.fongwell.satchi.crm.core.store.query;
 
+import com.fongwell.satchi.crm.core.store.domain.aggregate.Store;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,15 +19,7 @@ public interface AdminStoreQueryMapper {
 
     Map get(@Param("id")long id);
 
-    /**
-     * 根据地址查询所有的门店
-     * @return
-     */
     Collection<Map> addressGetStoreList(@Param("storeAddress")String storeAddress);
 
-    /**
-     * 查询门店所有的省份
-     * @return
-     */
     Collection<Map> findAllStoreList();
 }

@@ -14,8 +14,6 @@ public interface CustomerQueryRepository {
 
     CustomerDetails queryCustomerDetails(long id);
 
-    Customer queryCustomerStoreId(long customerId, Long storeId);
-
     void updateCustomer(long customerId,Long storeId);
 
     long queryCustomerStore(long customerId);

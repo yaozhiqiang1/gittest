@@ -73,7 +73,15 @@ public class WxCheckoutApi {
         wxPaymentGatewayRequest.setNotifyUrl(wxPayNotifyUrl + "/" + wxDefaultClient);
         wxPaymentGatewayRequest.setBody("test");
         data.put("wxpay", wxPaymentGatewayRequest);
-
+//        System.out.println("----------------------------------------------------------------123");
+//        System.out.println("----------------------------------------------------------------");
+//        System.out.println("WxCustomerContext.getWxId()："+WxCustomerContext.getWxId());
+//        System.out.println("wxDefaultClient："+wxDefaultClient);
+//        System.out.println("wxPayNotifyUrl + \"/\" + wxDefaultClient："+wxPayNotifyUrl + "/" + wxDefaultClient);
+//        System.out.println("setBody"+"test");
+//        System.out.println("----------------------------------------------------------------");
+        
+        
         request.setData(data);
         request.setCustomerId(WxCustomerContext.getUser().getCustomerId());
 

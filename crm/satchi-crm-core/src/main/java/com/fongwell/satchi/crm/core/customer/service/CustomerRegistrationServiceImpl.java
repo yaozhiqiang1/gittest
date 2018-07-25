@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  * Created by docker on 3/19/18.
  */
@@ -24,6 +27,7 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
     @Autowired
     private GenerateCustomerNumberService generateCustomerNumberService;
 
+
     @Override
     public Customer register(final CustomerRegisterRequest request) {
 
@@ -32,7 +36,7 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
             throw new DuplicateCustomerMobileException("Duplicate mobile:" + request.getMobile());
         }
 
-        customer = new Customer(generateCustomerNumberService.generate(), request.getName(), request.getMobile(), request.getPassword() == null ? null : passwordEncoder.encode(request.getPassword()));
+        customer = new Customer(generateCustomerNumberService.generate(), request.getName(), request.getMobile());
         customer.setDob(request.getDob());
         customer.setSex(request.getSex());
 
@@ -41,4 +45,12 @@ public class CustomerRegistrationServiceImpl implements CustomerRegistrationServ
         return customer;
 
     }
+
+    @Override
+    public Customer queryMobile(String mobile) {
+        Customer customer = customerRepository.findByMobile(mobile);
+        return customer;
+    }
+
+
 }

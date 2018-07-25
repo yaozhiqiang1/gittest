@@ -2,10 +2,12 @@ package com.fongwell.satchi.crm.core.store.service;
 
 import com.fongwell.satchi.crm.core.common.WriteService;
 import com.fongwell.satchi.crm.core.store.domain.aggregate.Store;
+import com.fongwell.satchi.crm.core.store.domain.aggregate.entity.StoreImage;
 import com.fongwell.satchi.crm.core.store.dto.StoreData;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**

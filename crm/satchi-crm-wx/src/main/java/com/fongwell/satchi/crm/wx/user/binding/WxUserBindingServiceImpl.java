@@ -50,4 +50,10 @@ public class WxUserBindingServiceImpl implements WxUserBindingService {
     public void unbind(final String wxId) {
         wxUserBindingStore.deleteBinding(wxId);
     }
+
+	@Override
+	public String getOpenId(Long customerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

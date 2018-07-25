@@ -1,5 +1,6 @@
 package com.fongwell.satchi.crm.core.order.query.mapper;
 
+import com.fongwell.satchi.crm.core.order.domain.aggregate.Order;
 import com.fongwell.satchi.crm.core.order.query.dto.OrderDetail;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,5 +22,7 @@ public interface OrderQueryMapper {
                                 @Param("from") int from,
                                 @Param("size") int size);
 
-    List<Long> queryOrderIdList(@Param("customerId") long customerId);
+	List<Order> findOrderByUser(@Param("id") long id);
+
+    List<Long> queryOrderIdList(long customerId);
 }

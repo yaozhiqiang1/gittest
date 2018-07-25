@@ -4,7 +4,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -29,6 +28,4 @@ public interface CreditQueryMapper {
      * @return
      */
     Boolean queryEnabled();
-
-
 }

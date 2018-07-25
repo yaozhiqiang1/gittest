@@ -47,6 +47,7 @@
         select id, imageUrl,videoUrl,title,buttonText,opacity,createdDate,state,source,introduction
         from crm_series
         where deleted = FALSE
+        and state = 'enabled'
         order by id desc
         <if test="from > 0">offset #{from}</if>
         <if test="size > 0">limit #{size}</if>

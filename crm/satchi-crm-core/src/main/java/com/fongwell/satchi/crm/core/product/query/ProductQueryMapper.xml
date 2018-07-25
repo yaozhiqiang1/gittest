@@ -175,6 +175,12 @@
         select id as "skuId" from crm_sku where product_id = #{id}
     </select>
 
+	<select id="findProduct" parameterType="java.lang.Long" resultType="int" >
+		select count(1) from crm_product p where p.categoryid = #{id} and p.deleted='f'
+	</select>
+
+
+
     <select id="selectSettings" resultMap="settings">
         select setting.type,setting.restrictionType,setting.restrictionAmount,setting.price,
         case when setting.type = 'GIFT' then setting.credit else null end as credit,
@@ -184,4 +190,14 @@
         from crm_product_settings setting
         where product_id = #{id}
     </select>
+
+    <select id="queryProductSettings" resultMap="settings">
+        select cps.id,cps.enddate,cps.startdate,cps.type,cps.product_id from crm_product_settings cps where  cps.type = 'GIFT';
+    </select>
+
+    <select id="queryByIdProductSettings" resultType="com.fongwell.satchi.crm.core.product.domain.aggregate.entity.ProductSettings">
+        select cps.type,cps.price,cps.restrictiontype,cps.restrictionamount,cps.credit from crm_product_settings cps where product_id = #{productId}
+    </select>
+
+
 </mapper>

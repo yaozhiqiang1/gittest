@@ -66,4 +66,11 @@ public class WxPaymentGatewayRequest implements Serializable {
     public void setOpenId(final String openId) {
         this.openId = openId;
     }
+
+	@Override
+	public String toString() {
+		return "WxPaymentGatewayRequest [client=" + client + ", openId=" + openId + ", body=" + body + ", createIp="
+				+ createIp + ", attach=" + attach + ", notifyUrl=" + notifyUrl + "]";
+	}
+    
 }

@@ -17,4 +17,6 @@ public interface WxUserBindingService {
 
     void unbind(String wxId);
 
+	String getOpenId(Long customerId);
+
 }

@@ -1,13 +1,23 @@
 package com.fongwell.satchi.crm.api.controller.wx;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fongwell.satchi.crm.api.Payload;
 import com.fongwell.satchi.crm.api.authentication.wx.WxCustomerContext;
+import com.fongwell.satchi.crm.core.customer.domain.value.AddressValue;
 import com.fongwell.satchi.crm.core.order.query.OrderQueryRepository;
+import com.fongwell.satchi.crm.core.order.query.dto.OrderDetail;
 import com.fongwell.satchi.crm.core.order.service.OrderService;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 /**
  * Created by docker on 4/23/18.
@@ -25,7 +35,13 @@ public class WxOrderApi {
 
     @GetMapping("/{id}")
     public Payload orderDetail(@PathVariable long id) {
-        return new Payload(orderQueryRepository.queryOrderDetail(id));
+        OrderDetail orderDetail = orderQueryRepository.queryOrderDetail(id);
+        AddressValue shippingAddress = orderDetail.getShippingAddress();
+        String district = shippingAddress.getDistrict();
+        if (!StringUtils.isNotBlank(district)){
+            shippingAddress.setDistrict("");
+        }
+        return new Payload(orderDetail);
     }
 
     @GetMapping("")
@@ -45,5 +61,12 @@ public class WxOrderApi {
     @ResponseStatus(HttpStatus.OK)
     public void complete(@PathVariable long id) {
         orderService.completeOrder(id);
+    }
+    
+    
+    @GetMapping("/unship/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void unship(@PathVariable long id) {
+        orderService.unship(id);
     }
 }

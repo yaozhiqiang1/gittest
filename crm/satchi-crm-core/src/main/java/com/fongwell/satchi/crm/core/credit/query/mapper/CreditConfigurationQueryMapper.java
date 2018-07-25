@@ -2,9 +2,7 @@ package com.fongwell.satchi.crm.core.credit.query.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.access.method.P;
 
-import java.util.Date;
 import java.util.Map;
 
 /**

@@ -16,6 +16,7 @@ public interface CreditService {
 
     Integer getCurrentlyAvailableCredits(long customerId, Date now);
 
+
     /**
      * 保存用户积分
      */
@@ -54,7 +55,7 @@ public interface CreditService {
      * @param customerId
      * @return
      */
-    Map creditExchangeMoney(CustomerCreditRecord customerCreditRecord,long customerId );
+    Map creditExchangeMoney(CustomerCreditRecord customerCreditRecord, long customerId );
 
     /**
      * 客户签到是否超过一天

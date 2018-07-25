@@ -16,7 +16,8 @@ public class WxSeriesApi {
     private WxSeriesQueryMapper seriesQueryMapper;
 
     @GetMapping
-    public Payload findAll(@RequestParam(required = false, defaultValue = "0") int from, @RequestParam(required = false, defaultValue = "0") int size) {
+    public Payload findAll(@RequestParam(required = false, defaultValue = "0") int from,
+    		@RequestParam(required = false, defaultValue = "0") int size) {
         return new Payload(seriesQueryMapper.findAll(from, size));
     }
 

@@ -67,6 +67,42 @@
         offset #{from}
         limit #{size}
     </select>
+    
+        <select id="querySC" resultMap="storeCustomer">
+
+        select c.id, c.name,c.dob,c.sex, wx.headimgurl as headImageUrl,
+        case when ic.store_id is null then false else true end as important
+        from fw_customer c
+        left join wx_binding b on b.targetid = c.id
+        left join crm_wx_user wx on wx.id = b.wxid
+        left join fw_important_customer ic on ic.customer_id = c.id
+        <where>
+            c.deleted = false
+            <if test="storeId != null">
+                and c.storeid = #{storeId}
+            </if>
+        </where>
+
+        <if test="query!=null and query != ''">
+            <bind name="searchQuery" value="query"/>
+            and c.name like '%${searchQuery}%'
+        </if>
+
+        <if test="ids != null and ids.size() > 0">
+           and c.id in
+            <foreach collection="ids" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="sortBy == 'dob' and sort == 'desc'">
+          order by c.dob desc nulls last, c.id desc
+        </if>
+        <if test="sortBy == 'dob' and sort == 'asc'">
+          order by c.dob asc nulls last, c.id asc
+        </if>
+        offset #{from}
+        limit #{size}
+    </select>
 
 
     <resultMap id="storeCustomerDetail" type="java.util.HashMap">
@@ -87,4 +123,17 @@
         left join fw_important_customer ic on ic.customer_id = c.id
         where c.id = #{id}
     </select>
+    
+    <select id="getOpenId" parameterType="java.lang.Long" resultType="java.lang.String">
+    	select wxid from wx_binding where targetid={id}
+    </select>
+    
+    <update id="updateType">
+    	update crm_order set paymentGatewayType='wx' where id=#{id}
+    </update>
+    
+    <select id="checkMobile" parameterType="java.lang.String" resultType="int">
+    	select count(1) from crm_staff where mobile = #{mobile}
+    </select>
+    
 </mapper>

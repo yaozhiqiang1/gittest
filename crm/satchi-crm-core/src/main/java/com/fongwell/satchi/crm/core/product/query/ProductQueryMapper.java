@@ -21,6 +21,8 @@ public interface ProductQueryMapper {
 
     Map get(@Param("id") Long id);
 
+	int findProduct(@Param("id") Long id);
+
     List<Map> queryProductSettings();
 
     ProductSettings queryByIdProductSettings(@Param("productId") long productId);

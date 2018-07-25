@@ -1,15 +1,19 @@
 package com.fongwell.satchi.crm.api.controller.admin;
 
 import com.fongwell.base.rest.Payload;
+import com.fongwell.satchi.crm.core.store.domain.aggregate.Store;
+import com.fongwell.satchi.crm.core.store.domain.aggregate.entity.StoreImage;
 import com.fongwell.satchi.crm.core.store.dto.StoreData;
 import com.fongwell.satchi.crm.core.store.query.AdminStoreQueryMapper;
 import com.fongwell.satchi.crm.core.store.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,29 +75,5 @@ public class StoreApi {
         return new Payload(adminStoreQueryMapper.get(id));
     }
 
-    /**
-     * 根据地址获取商店信息
-     * @param storeAddress
-     * @return
-     */
-    @GetMapping("/addressGetStoreList")
-    public Payload locationStore(@RequestParam String storeAddress){
-
-        Collection<Map> maps = storeService.addressGetStoreList(storeAddress);
-
-        return new Payload(maps);
-    }
-
-    /**
-     * 查询所有的商店省份
-     * @return
-     */
-    @GetMapping("/findAllStoreList")
-    public Payload findAllStoreList(){
-
-        Collection<Map> storeList = storeService.findAllStoreList();
-
-        return new Payload(storeList);
-    }
 
 }

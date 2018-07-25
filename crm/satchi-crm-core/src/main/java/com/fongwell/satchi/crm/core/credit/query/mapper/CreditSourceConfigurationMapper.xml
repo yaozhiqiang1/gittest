@@ -10,20 +10,16 @@
         update crm_credit_source_configuration
         <set>
             <if test="credit != null and credit != ''">
-            credit = #{credit},
+                credit = #{credit},
             </if>
             <if test="enabled != null and enabled != ''">
-            enabled = #{enabled}
+                enabled = #{enabled}
             </if>
         </set>
         <where>
             type = #{type}
         </where>
     </update>
-
-    <select id="queryByType" resultType="com.fongwell.satchi.crm.core.credit.domain.entity.CreditSourceConfiguration">
-        select * from crm_credit_source_configuration ccsc where ccsc.type = #{type}
-    </select>
 
 </mapper>
 

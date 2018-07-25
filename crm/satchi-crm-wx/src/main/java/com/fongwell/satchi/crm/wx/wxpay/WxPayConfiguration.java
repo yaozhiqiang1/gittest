@@ -50,7 +50,17 @@ public class WxPayConfiguration {
                             , value.get("mchId"), value.get("certificateKey"), value.get("certificateFile")
                             , value.get("deviceInfo"), value.get("partnerId"), value.get("subId")
                             , value.get("subMchId"));
-
+                    System.out.println("===============================================================");
+                    System.out.println("value.get(\"appId\")             :"+value.get("appId"));
+                    System.out.println("value.get(\"appSecret\")             :"+value.get("appSecret"));
+                    System.out.println("value.get(\"paySignKey\")             :"+value.get("paySignKey"));
+                    System.out.println("value.get(\"mchId\")             :"+value.get("mchId"));
+                    System.out.println("value.get(\"certificateFile\")             :"+value.get("certificateFile"));
+                    System.out.println("value.get(\"deviceInfo\")             :"+value.get("deviceInfo"));
+                    System.out.println("value.get(\"partnerId\")             :"+value.get("partnerId"));
+                    System.out.println("value.get(\"subId\")             :"+value.get("subId"));
+                    System.out.println("value.get(\"subMchId\")             :"+value.get("subMchId"));
+                    System.out.println("===============================================================");
                     result.put(entry.getKey(), account);
                 }
 

@@ -1,12 +1,13 @@
 package com.fongwell.satchi.crm.wx.user.store;
 
-import com.foxinmy.weixin4j.mp.model.User;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import java.io.Serializable;
+
+import com.foxinmy.weixin4j.mp.model.User;
 
 /**
  * Created by docker on 10/21/17.

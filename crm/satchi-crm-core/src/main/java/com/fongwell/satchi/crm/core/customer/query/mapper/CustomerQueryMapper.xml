@@ -12,6 +12,7 @@
     </resultMap>
 
     <select id="queryCustomerDetailsByMobile" resultMap="customerDetails">
+
         select c.id,c.name,c.passwordhash as password,c.deleted,
          c.mobile from fw_customer c
         where c.mobile = #{mobile}
@@ -32,11 +33,11 @@
     </resultMap>
 
     <select id="queryCustomerStoreId" resultMap="customer">
-        select c.id,c.mobile,c.storeid from fw_customer c where c.id = #{customerId} and c.storeid = #{storeId}
+        select c.id,c.mobile,c.storeid from fw_customer c where c.mobile = #{mobile} and c.storeid = #{storeId}
     </select>
 
     <update id="updateCustomer">
-        update fw_customer set storeid = #{storeId} where id = #{customerId}
+        update fw_customer set storeid = #{storeId} where mobile = #{mobile}
     </update>
 
     <select id="queryByMobile" resultType="long">
@@ -48,6 +49,7 @@
     </select>
 
     <select id="queryCustomerStore" resultType="long">
-        select storeid from fw_customer where id = #{customerId}
+    select storeid from fw_customer where id = #{customerId}
     </select>
+    
 </mapper>

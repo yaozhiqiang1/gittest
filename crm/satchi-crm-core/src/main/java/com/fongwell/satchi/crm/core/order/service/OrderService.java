@@ -1,7 +1,8 @@
 package com.fongwell.satchi.crm.core.order.service;
 
-import com.fongwell.satchi.crm.core.order.domain.dto.ShippingRequest;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fongwell.satchi.crm.core.order.domain.dto.ShippingRequest;
 
 /**
  * Created by docker on 5/7/18.

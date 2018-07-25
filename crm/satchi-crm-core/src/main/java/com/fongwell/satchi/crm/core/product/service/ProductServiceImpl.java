@@ -20,7 +20,6 @@ import com.fongwell.satchi.crm.core.product.service.event.ProductEnableEvent;
 import com.fongwell.satchi.crm.core.product.value.ProductRestrictionType;
 import com.fongwell.satchi.crm.core.product.value.ProductType;
 import com.fongwell.satchi.crm.core.support.ddd.AggregateFactory;
-import net.sf.ehcache.store.AuthoritativeTier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -223,7 +222,7 @@ public class ProductServiceImpl implements ProductService {
                 return new Payload(productSettings.getRestrictionAmount() >= total + orderItem.getQuantity());
             }
         }
-        return new Payload(false);
+        return null;
     }
 
 }

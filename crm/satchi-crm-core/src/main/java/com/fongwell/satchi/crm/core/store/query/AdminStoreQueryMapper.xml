@@ -39,8 +39,6 @@
     </select>
 
     <select id="findAllStoreList" resultMap="store">
-        select cs.id,cs.province from crm_store cs
+        select distinct cs.province from crm_store cs
     </select>
-
-
 </mapper>

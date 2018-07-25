@@ -62,6 +62,11 @@
 
     </select>
 
+	<select id="findOrderByUser" resultMap="orderDetail">
+	select * from crm_order o where customer_id=#{id} and o.state != 'cancelled' and o.state != 'pending'
+	</select>
+	
+	
 
     <resultMap id="orderListItem" type="map">
         <id property="id" column="id"/>

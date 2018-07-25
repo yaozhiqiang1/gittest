@@ -2,6 +2,7 @@ package com.fongwell.satchi.crm.core.store.service;
 
 import com.fongwell.satchi.crm.core.common.AbstractWriteService;
 import com.fongwell.satchi.crm.core.store.domain.aggregate.Store;
+import com.fongwell.satchi.crm.core.store.domain.aggregate.entity.StoreImage;
 import com.fongwell.satchi.crm.core.store.dto.StoreData;
 import com.fongwell.satchi.crm.core.store.query.AdminStoreQueryMapper;
 import com.fongwell.satchi.crm.core.store.repository.StoreRepository;

@@ -1,12 +1,16 @@
 package com.fongwell.satchi.crm.core.category.service;
 
-import com.fongwell.satchi.crm.core.category.domain.aggregate.TopCategory;
-import com.fongwell.satchi.crm.core.category.dto.TopCategoryData;
-import com.fongwell.satchi.crm.core.category.error.CategoryActiveException;
-import com.fongwell.satchi.crm.core.category.repository.TopCategoryRepository;
-import com.fongwell.satchi.crm.core.common.AbstractWriteService;
-import com.fongwell.satchi.crm.core.common.State;
-import com.fongwell.satchi.crm.core.common.error.DataNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,11 +18,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.*;
+import com.fongwell.satchi.crm.core.category.domain.aggregate.TopCategory;
+import com.fongwell.satchi.crm.core.category.dto.TopCategoryData;
+import com.fongwell.satchi.crm.core.category.repository.TopCategoryRepository;
+import com.fongwell.satchi.crm.core.common.AbstractWriteService;
+import com.fongwell.satchi.crm.core.common.State;
+import com.fongwell.satchi.crm.core.common.error.DataNotFoundException;
 
 /**
  * Created by roman on 18-4-16.
@@ -56,10 +61,14 @@ public class TopCategoryServiceImpl extends AbstractWriteService<TopCategory, Lo
 
     @Override
     public synchronized String onEnable(final Collection<Long> ids) {
+    	System.out.println("开始进入启用热门方法:");
         List<TopCategory> all = repository.findByState(State.enable);
         Set exists = new HashSet(all.size(), 2f);
         for (TopCategory next : all) {
-            exists.add(next.getId());
+        	if(next.getState().equals(State.enable)) {
+        		System.out.println("已启用的热门分类："+next.getName());
+        		exists.add(next.getId());
+        	}
         }
         exists.addAll(ids);
         if (exists.size() > limit) {
@@ -95,7 +104,6 @@ public class TopCategoryServiceImpl extends AbstractWriteService<TopCategory, Lo
     @Override
     public void onDelete(Collection<Long> ids) {
         if (!CollectionUtils.isEmpty(ids)) {
-
             List<TopCategory> all = repository.findAll(ids);
             for (TopCategory next : all) {
                 repository.delete(next);

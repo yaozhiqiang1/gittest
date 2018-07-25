@@ -81,7 +81,6 @@ public class TopCategoryApi {
     }
 
     @PostMapping("/enable")
-    @ResponseStatus(HttpStatus.OK)
     public Payload enable(@RequestParam Collection<Long> ids){
         String state = topCategoryService.onEnable(ids);
         return new Payload(state);

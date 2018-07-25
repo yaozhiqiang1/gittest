@@ -29,12 +29,6 @@ public class CustomerQueryRepositoryImpl implements CustomerQueryRepository {
     }
 
     @Override
-    public Customer queryCustomerStoreId(long customerId, Long storeId) {
-        return customerQueryMapper.queryCustomerStoreId(customerId,storeId);
-    }
-
-
-    @Override
     public void updateCustomer(long customerId,Long storeId) {
         customerQueryMapper.updateCustomer(customerId,storeId);
     }
@@ -44,5 +38,4 @@ public class CustomerQueryRepositoryImpl implements CustomerQueryRepository {
         return customerQueryMapper.queryCustomerStore(customerId);
 
     }
-
 }

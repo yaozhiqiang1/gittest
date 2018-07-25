@@ -47,6 +47,7 @@ where cc.id = #{id}
         select expiration from crm_credit_configuration where id = #{id}
     </select>
 
+
 </mapper>
 
 

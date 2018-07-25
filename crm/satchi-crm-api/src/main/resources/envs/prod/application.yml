@@ -59,8 +59,8 @@ wx:
         enabled: true
         accounts:
           test:
-            appId: wx7a2d5fcb771ecf37
-            appSecret: 7edaceb41074802c89ca63fe5fbf3f58
+            appId: wx6f1303b425b908f2
+            appSecret: 8f5ec6918ee9e49bca94c869b8be1da2
             #appId: wxcaf3ca475beb17f7
             #appSecret: be4f2a1424b3bbbff633a1e925078f63
   pay:
@@ -72,10 +72,10 @@ wx:
           enabled: true
           accounts:
             test:
-              appId: wx7a2d5fcb771ecf37
-              appSecret: 7edaceb41074802c89ca63fe5fbf3f58
-              mchId: 1313837101
-              paySignKey: 2ab9071b06b9f739b950ddb41db2690d
+              appId: wx6f1303b425b908f2
+              appSecret: 8f5ec6918ee9e49bca94c869b8be1da2
+              mchId: 1501896341
+              paySignKey: 1Eg5pmIgfjQE9ypHcYgedSpdA6Bj17UP
 
 
 

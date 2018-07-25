@@ -12,6 +12,7 @@
         <result property="paymentGatewayType" column="paymentGatewayType"/>
         <result property="trackingNumber" column="trackingNumber"/>
         <result property="trackingName" column="trackingName"/>
+        <result property="gatewaytype" column="gatewaytype"/>
 
     </resultMap>
 
@@ -35,6 +36,7 @@
         ship.trackingNumber,ship.trackingName
         from crm_order o
         left join crm_shipping ship on ship.order_id = o.id
+      	left join crm_order_payment payment on payment.order_id = o.id
         <include refid="ordersListWhere"/>
         order by o.createdDate desc
         offset #{from}

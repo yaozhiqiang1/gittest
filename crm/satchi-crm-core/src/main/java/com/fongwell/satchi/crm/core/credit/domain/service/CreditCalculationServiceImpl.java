@@ -39,6 +39,12 @@ public class CreditCalculationServiceImpl implements CreditCalculationService, I
         }
 
         CreditSourceConfiguration sourceConfiguration = config.getSource(source.getType());
+        
+        System.out.println("");
+        System.out.println("source.getType():"+source.getType());
+        System.out.println("sourceConfiguration:"+sourceConfiguration.toString());
+        System.out.println("");
+        
         Assert.notNull(sourceConfiguration, "CreditSourceConfiguration: " + source.getType());
 
         CreditSourceCalculationProvider provider = getProvider(source);

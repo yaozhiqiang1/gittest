@@ -155,7 +155,7 @@ public class WxCreditApi {
 
     /**
      * 限制礼品购买
-     * @param orderItem 测试
+     * @param orderItem
      * @return
      */
     @PostMapping("/restrictionamountGift")

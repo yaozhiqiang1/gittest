@@ -63,16 +63,4 @@ public class StoreImageApi {
         storeImageService.create(data);
     }
 
-    /**
-     * 根据storeid 查询商店的详情图片
-     * @param storeid
-     * @return
-     */
-    @GetMapping("/findByIdStoreImageList")
-    public Payload findByIdStoreImageList(@RequestParam Long storeid){
-
-        Collection<Map> storeImageList = adminStoreImageQueryMapper.findByIdStoreImageList(storeid);
-
-        return new Payload(storeImageList);
-    }
 }
